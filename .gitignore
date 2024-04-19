@@ -351,3 +351,9 @@ MigrationBackup/
 
 # Rider (.NET IDE by JetBrains) working folder
 .idea/
+
+.terraform/
+
+*.tfstate
+*.tfstate.backup
+terraform/.terraform.lock.hcl
