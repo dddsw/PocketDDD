@@ -2,8 +2,6 @@ name: Build and deploy Pocket DDD Server to Web App PocketDDDServerWebAPI2024
 on:
   workflow_dispatch:
   push:
-    branches:
-    - main
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
