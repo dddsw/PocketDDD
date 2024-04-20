@@ -24,3 +24,9 @@ resource "azurerm_mssql_database" "sqldb" {
     prevent_destroy = false
   }
 }
+
+resource "azurerm_mssql_virtual_network_rule" "sqlserver_subnet_rule" {
+  name      = "sql-vnet-rule"
+  server_id = azurerm_mssql_server.sqlserver.id
+  subnet_id = azurerm_subnet.subnet.id
+}
