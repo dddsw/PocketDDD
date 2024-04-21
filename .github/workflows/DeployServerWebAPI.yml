@@ -1,4 +1,4 @@
-name: Build and deploy Pocket DDD Server to Web App PocketDDDServerWebAPI2024
+name: Build and deploy Pocket DDD Server
 on:
   workflow_dispatch:
   push:
