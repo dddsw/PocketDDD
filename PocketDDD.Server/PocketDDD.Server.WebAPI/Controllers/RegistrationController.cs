@@ -19,7 +19,6 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpPost("[Action]")]
-    [AllowAnonymous]
     public Task<LoginResultDTO> Login(RegisterDTO dto)
     {
         return registrationService.Register(dto);
