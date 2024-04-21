@@ -25,8 +25,9 @@ resource "azurerm_mssql_database" "sqldb" {
   }
 }
 
-resource "azurerm_mssql_virtual_network_rule" "sqlserver_subnet_rule" {
-  name      = "sql-vnet-rule"
-  server_id = azurerm_mssql_server.sqlserver.id
-  subnet_id = azurerm_subnet.subnet.id
+resource "azurerm_mssql_firewall_rule" "firewall_rule" {
+  name             = "AllowAllAzureServices"
+  server_id        = azurerm_mssql_server.sqlserver.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }

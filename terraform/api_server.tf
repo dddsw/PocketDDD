@@ -24,6 +24,4 @@ resource "azurerm_linux_web_app" "api_server_web_app" {
     type  = "SQLAzure"
     value = local.db_connection_string
   }
-
-  virtual_network_subnet_id = azurerm_subnet.subnet.id
 }
