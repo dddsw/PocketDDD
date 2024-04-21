@@ -45,3 +45,9 @@ resource "azurerm_key_vault_secret" "sqldb_admin_password" {
   value        = random_password.admin_password.result
   key_vault_id = azurerm_key_vault.key_vault.id
 }
+
+resource "azurerm_key_vault_secret" "api_admin_key" {
+  name         = "${local.resource_prefix}-admin-api-key"
+  value        = random_password.admin_api_key.result
+  key_vault_id = azurerm_key_vault.key_vault.id
+}

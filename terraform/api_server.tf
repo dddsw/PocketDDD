@@ -24,4 +24,8 @@ resource "azurerm_linux_web_app" "api_server_web_app" {
     type  = "SQLAzure"
     value = local.db_connection_string
   }
+
+  app_settings = {
+    "AdminKey" = random_password.admin_api_key.result
+  }
 }
