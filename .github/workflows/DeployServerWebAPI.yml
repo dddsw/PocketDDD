@@ -1,19 +1,17 @@
-name: Build and deploy Pocket DDD Server to Web App PocketDDDServerWebAPI2024
+name: Build and deploy Pocket DDD Server
 on:
-  push:
-    branches:
-    - main
   workflow_dispatch:
+  push:
 
 env:
-  AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI\publish
+  AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: PocketDDD.Server/PocketDDD.Server.WebAPI
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET SDK
@@ -35,9 +33,14 @@ jobs:
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    environment: dev
     needs: build
     steps:
+    - name: Log in with Azure
+      uses: azure/login@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
@@ -46,6 +49,5 @@ jobs:
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.PocketDDDServerWebAPI2024_3A54 }}
+        app-name: pocketddd-dev-api-server
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
