@@ -32,6 +32,10 @@ jobs:
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v3
     - run: terraform init
+    - name: Log in with Azure
+      uses: azure/login@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - run: terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
 
   build_api_server:
