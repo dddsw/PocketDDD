@@ -14,6 +14,9 @@ resource "azurerm_mssql_server" "sqlserver" {
 resource "azurerm_mssql_database" "sqldb" {
   name      = "${local.resource_prefix}-sqldatabase"
   server_id = azurerm_mssql_server.sqlserver.id
+  sku_name = var.sql_db_sku
+  max_size_gb = var.sql_max_storage
+  storage_account_type = "Local"
 
   tags = {
     environment = var.env

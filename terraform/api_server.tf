@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "api_server_service_plan" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
-  sku_name            = "P0v3"
+  sku_name            = var.api_app_service_sku
 }
 
 
@@ -17,6 +17,7 @@ resource "azurerm_linux_web_app" "api_server_web_app" {
     application_stack {
       dotnet_version = "8.0"
     }
+    always_on = var.api_always_on
   }
 
   connection_string {
