@@ -27,3 +27,15 @@ variable "api_always_on" {
   nullable = false
   type = bool
 }
+
+variable "client_sku_tier" {
+  default = ""
+  nullable = false
+  type = string
+}
+
+variable "client_sku_size" {
+  default = ""
+  nullable = false
+  type = string
+}

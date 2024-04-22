@@ -1,15 +1,17 @@
 # PocketDDD
 
 # Running terraform locally
-Ensure both terraform and the Azure CLI are installed
+Ensure the Azure, GitHub, and terraform CLIs are installed
 ```
-brew install terraform
 brew install azure-cli
+bre install gh
+brew install terraform
 ```
 
-Login to Azure
+Login to Azure and GitHub
 ```
 az login
+gh auth login
 ```
 
 From the `terraform` directory run init, plan, then apply if happy with the changes.
