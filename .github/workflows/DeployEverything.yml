@@ -9,10 +9,8 @@ on:
     secrets:
       AZURE_CREDENTIALS:
         required: true
-        type: string
       AZURE_STATIC_WEB_APPS_API_TOKEN:
         required: true
-        type: string
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
@@ -31,8 +29,8 @@ jobs:
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v3
     - run: |
-      cd ./terraform
-      terraform init
+        cd ./terraform
+        terraform init
     - run: terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
 
   build_api_server:
@@ -62,7 +60,7 @@ jobs:
     name: Deploy API Server
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
-    needs: build
+    needs: [deploy_terraform, build_api_server]
     steps:
     - name: Log in with Azure
       uses: azure/login@v1
@@ -83,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     name: Build and Deploy Blazor Client
+    needs: deploy_terraform
     steps:
       - uses: actions/checkout@v2
         with:
