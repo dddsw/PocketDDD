@@ -2,7 +2,6 @@ name: Build and deploy Pocket DDD Blazor Client
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   build_and_deploy_job:
