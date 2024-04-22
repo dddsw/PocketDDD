@@ -23,14 +23,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy terraform
     environment: ${{ inputs.env }}
+    defaults:
+      run:
+        working-directory: ./terraform
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v3
-    - run: |
-        cd ./terraform
-        terraform init
+    - run: terraform init
     - run: terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
 
   build_api_server:
