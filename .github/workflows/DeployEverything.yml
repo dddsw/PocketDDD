@@ -34,12 +34,12 @@ jobs:
         working-directory: ./terraform
 
     steps:
-    - name: Generate a token
-      id: generate-token
-      uses: actions/create-github-app-token@v1
-      with:
-        app-id: ${{ secrets.TERRAFORM_DEPLOYER_APP_ID }}
-        private-key: ${{ secrets.TERRAFORM_DEPLOYER_PRIVATE_KEY }}
+    # - name: Generate a token
+    #   id: generate-token
+    #   uses: actions/create-github-app-token@v1
+    #   with:
+    #     app-id: ${{ secrets.TERRAFORM_DEPLOYER_APP_ID }}
+    #     private-key: ${{ secrets.TERRAFORM_DEPLOYER_PRIVATE_KEY }}
     - uses: actions/checkout@v4
     - name: Log in with Azure
       uses: azure/login@v1
@@ -51,8 +51,11 @@ jobs:
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
         terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
       env:
-        GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+        GITHUB_APP_ID: ${{ secrets.TERRAFORM_DEPLOYER_APP_ID }}
+        GITHUB_APP_PEM_FILE: ${{ secrets.TERRAFORM_DEPLOYER_PRIVATE_KEY }}
+        GITHUB_APP_INSTALLATION_ID: ${{ secrets.TERRAFORM_DEPLOYER_INSTALLATION_ID }}
+
 
   build_api_server:
     runs-on: ubuntu-latest
