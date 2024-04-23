@@ -17,6 +17,8 @@ on:
         required: true
       TERRAFORM_STATE_ACCESS_KEY:
         required: true
+      TERRAFORM_DEPLOYER_INSTALLATION_ID:
+        required: true
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
