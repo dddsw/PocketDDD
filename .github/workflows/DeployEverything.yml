@@ -28,6 +28,12 @@ jobs:
         working-directory: ./terraform
 
     steps:
+    - name: Generate a token
+      id: generate-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ secrets.TERRAFORM_DEPLOYER_APP_ID }}
+        private-key: ${{ secrets.TERRAFORM_DEPLOYER_PRIVATE_KEY }}
     - uses: actions/checkout@v4
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v3
@@ -37,6 +43,8 @@ jobs:
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - run: terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
+      env:
+        GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
   build_api_server:
     runs-on: ubuntu-latest
