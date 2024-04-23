@@ -11,6 +11,10 @@ on:
         required: true
       AZURE_STATIC_WEB_APPS_API_TOKEN:
         required: true
+      TERRAFORM_DEPLOYER_APP_ID:
+        required: true
+      TERRAFORM_DEPLOYER_PRIVATE_KEY:
+        required: true
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
