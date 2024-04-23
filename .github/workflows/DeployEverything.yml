@@ -39,14 +39,16 @@ jobs:
         app-id: ${{ secrets.TERRAFORM_DEPLOYER_APP_ID }}
         private-key: ${{ secrets.TERRAFORM_DEPLOYER_PRIVATE_KEY }}
     - uses: actions/checkout@v4
-    - name: Setup terraform
-      uses: hashicorp/setup-terraform@v3
-    - run: terraform init
     - name: Log in with Azure
       uses: azure/login@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-    - run: terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
+    - name: Setup terraform
+      uses: hashicorp/setup-terraform@v3
+    - run: |
+        terraform init
+        terraform plan --var-file ../tfvars/${{ inputs.env }}.tfvars
+        terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
       env:
         GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
