@@ -8,7 +8,7 @@ delete EventDetail
 
 GO
 
-DBCC CHECKIDENT ('[EventDetail]', RESEED, 0);
+DBCC CHECKIDENT ('[EventDetail]', RESEED, 1);
 DBCC CHECKIDENT ('[Tracks]', RESEED, 0);
 DBCC CHECKIDENT ('[TimeSlots]', RESEED, 0);
 DBCC CHECKIDENT ('[Sessions]', RESEED, 0);
