@@ -102,7 +102,7 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
-          echo "{WEB_APP_API_TOKEN}={$apiToken}" >> "$GITHUB_ENV"
+          echo "WEB_APP_API_TOKEN=$apiToken" >> "$GITHUB_ENV"
 
       - name: Build And Deploy
         id: builddeploy
