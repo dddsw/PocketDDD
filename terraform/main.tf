@@ -12,7 +12,8 @@ resource "random_string" "admin_login" {
 }
 
 resource "random_password" "admin_password" {
-  length = 25
+  length = 30
+  special = false
 }
 
 resource "random_password" "admin_api_key" {
