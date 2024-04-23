@@ -24,7 +24,7 @@ locals {
 }
 
 resource "azurerm_key_vault" "key_vault" {
-  name                        = "${local.resource_prefix}-secrets-kv"
+  name                        = "${local.resource_prefix}-kv"
   location                    = azurerm_resource_group.rg.location
   resource_group_name         = azurerm_resource_group.rg.name
   enabled_for_disk_encryption = true
