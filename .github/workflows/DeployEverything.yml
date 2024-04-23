@@ -84,7 +84,7 @@ jobs:
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: pocketddd-dev-api-server
+        app-name: pocketddd-${{ inputs.env }}-api-server-web-app
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   build_and_deploy_blazor_client:
