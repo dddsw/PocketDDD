@@ -14,7 +14,7 @@ Authorization: <insert-admin-key>
 Ensure the Azure, GitHub, and terraform CLIs are installed
 ```
 brew install azure-cli
-bre install gh
+brew install gh
 brew install terraform
 ```
 
@@ -24,11 +24,16 @@ az login
 gh auth login
 ```
 
+Retrieve the access key for the terraform state storage account
+```
+export ARM_ACCESS_KEY=$(az storage account keys list -g pocketddd-terraform-state -n pocketdddterraformstate --query [0].value -o tsv)
+```
+
 From the `terraform` directory run init, plan, then apply if happy with the changes.
 ```
 cd ./terraform
 
-terraform init
+terraform init -backend-config="dev.terraform.tfstate"  
 terraform plan -var-file ../tfvars/dev.tfvars
 terraform apply -var-file ../tfvars/dev.tfvars
 ```

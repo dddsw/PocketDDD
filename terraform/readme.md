@@ -1,4 +1,4 @@
-Command to create a new deployment service principal
+Command to create a new deployment service principal (requires the User Access Administrator role in an Azure subscription):
 ```
 az ad sp create-for-rbac -n DevDeployment --role Contributor --scopes /subscriptions/<insert-subscription-id>/resourceGroups/<resource-group-name> --sdk-auth
 ```

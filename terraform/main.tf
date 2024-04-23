@@ -26,6 +26,6 @@ data "github_repository" "repo" {
 }
 
 resource "github_repository_environment" "repo_environment" {
-  repository       = "PocketDDD"
-  environment      = var.env
+  repository  = "PocketDDD"
+  environment = var.env
 }
