@@ -1,4 +1,4 @@
-env = "dev"
+env = "test"
 sql_db_sku = "Basic"
 sql_max_storage = "2"
 api_app_service_sku = "F1"
