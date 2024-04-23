@@ -6,13 +6,12 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "random_string" "admin_login" {
-  length           = 16
-  special          = true
-  override_special = "/@£$"
+  length  = 20
+  special = false
 }
 
 resource "random_password" "admin_password" {
-  length = 30
+  length  = 30
   special = false
 }
 
