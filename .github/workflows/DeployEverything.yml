@@ -51,7 +51,7 @@ jobs:
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
         terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
       env:
-        GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
 
   build_api_server:
