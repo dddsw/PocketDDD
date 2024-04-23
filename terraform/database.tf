@@ -34,3 +34,15 @@ resource "azurerm_mssql_firewall_rule" "firewall_rule" {
   start_ip_address = "0.0.0.0"
   end_ip_address   = "0.0.0.0"
 }
+
+resource "azurerm_key_vault_secret" "sqldb_connectionstring" {
+  name         = "${local.resource_prefix}-db-connection-string"
+  value        = local.db_connection_string
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "sqldb_admin_password" {
+  name         = "${local.resource_prefix}-db-admin-password"
+  value        = random_password.admin_password.result
+  key_vault_id = azurerm_key_vault.key_vault.id
+}

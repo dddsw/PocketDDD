@@ -30,3 +30,9 @@ resource "azurerm_linux_web_app" "api_server_web_app" {
     "AdminKey" = random_password.admin_api_key.result
   }
 }
+
+resource "azurerm_key_vault_secret" "api_admin_key" {
+  name         = "${local.resource_prefix}-admin-api-key"
+  value        = random_password.admin_api_key.result
+  key_vault_id = azurerm_key_vault.key_vault.id
+}

@@ -7,9 +7,8 @@ resource "azurerm_static_web_app" "blazor-client" {
   sku_size = var.client_sku_size
 }
 
-resource "github_actions_environment_secret" "test_secret" {
-  repository      = data.github_repository.repo.name
-  environment     = github_repository_environment.repo_environment.environment
-  secret_name     = "AZURE_STATIC_WEB_APPS_API_TOKEN"
-  plaintext_value = azurerm_static_web_app.blazor-client.api_key
+resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
+  name         = "${local.resource_prefix}-blazor-client-deployment-token"
+  value        = azurerm_static_web_app.blazor-client.api_key
+  key_vault_id = azurerm_key_vault.key_vault.id
 }
