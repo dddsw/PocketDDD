@@ -39,7 +39,14 @@ jobs:
       uses: hashicorp/setup-terraform@v3
     - run: |
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
-        terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
+        
+        terraform plan --var-file ../tfvars/${{ inputs.env }}.tfvars -detailed-exitcode
+
+        # Tests whether there are any changes to make, see: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        exitCode=$?
+        if [ $exitCode -eq 2 ]; then
+          terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
+        fi
       env:
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
 
