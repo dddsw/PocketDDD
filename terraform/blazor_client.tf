@@ -5,6 +5,11 @@ resource "azurerm_static_web_app" "blazor-client" {
 
   sku_tier = var.client_sku_tier
   sku_size = var.client_sku_size
+
+  app_settings = {
+    "apiUrl": "https://pocketddd-${ var.env }-api-server-web-app.azurewebsites.net/api/"
+    "fakeBackend": "false"
+  }
 }
 
 resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
