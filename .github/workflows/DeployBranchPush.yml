@@ -1,6 +1,9 @@
-name: Deploy Pull Request
+name: Deploy Branch Push
 on:
-  pull_request:
+  push:
+    branches-ignore:
+      - 'main'
+
 
 jobs:
   deploy_to_test:
