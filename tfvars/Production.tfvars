@@ -1,4 +1,4 @@
-env = "prod"
+env = "production"
 sql_db_sku = "Basic"
 sql_max_storage = "2"
 api_app_service_sku = "B1"
