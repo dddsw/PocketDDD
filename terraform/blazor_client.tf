@@ -7,8 +7,6 @@ resource "azurerm_static_web_app" "blazor-client" {
   sku_size = var.client_sku_size
 
   app_settings = {
-    "ASPNETCORE_ENVIRONMENT": "${ var.env }"
-    "DOTNET_ENVIRONMENT": "${ var.env }"
     "apiUrl": "https://pocketddd-${ var.env }-api-server-web-app.azurewebsites.net/api/"
     "fakeBackend": "false"
   }
