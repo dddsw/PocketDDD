@@ -20,7 +20,7 @@ resource "random_password" "admin_api_key" {
 }
 
 locals {
-  db_connection_string = "Server=tcp:${local.sql_server_name}.database.windows.net,1433;Initial Catalog=pocketddd-dev-sqldatabase;Persist Security Info=False;User ID=${random_string.admin_login.result};Password=${random_password.admin_password.result};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  db_connection_string = "Server=tcp:${local.sql_server_name}.database.windows.net,1433;Initial Catalog=pocketddd-${var.env}-sqldatabase;Persist Security Info=False;User ID=${random_string.admin_login.result};Password=${random_password.admin_password.result};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 }
 
 resource "azurerm_key_vault" "key_vault" {
