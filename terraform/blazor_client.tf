@@ -22,9 +22,9 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
   key_vault_id = azurerm_key_vault.key_vault.id
 }
 
-resource "cloudflare_zone" "dns_zone" {
+data "cloudflare_zone" "dns_zone" {
   account_id = var.cloudflare_account_id
-  zone       = "dddsouthwest.com"
+  name       = "dddsouthwest.com"
 }
 
 resource "cloudflare_record" "example" {
