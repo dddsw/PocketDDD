@@ -5,37 +5,37 @@ variable "env" {
 }
 
 variable "sql_db_sku" {
-  default = "S0"
+  default  = "S0"
   nullable = false
-  type = string
+  type     = string
 }
 
 variable "sql_max_storage" {
-  default = "2"
+  default  = "2"
   nullable = false
-  type = string
+  type     = string
 }
 
 variable "api_app_service_sku" {
-  default = "B1"
+  default  = "B1"
   nullable = false
-  type = string
+  type     = string
 }
 
 variable "api_always_on" {
-  default = true
+  default  = true
   nullable = false
-  type = bool
+  type     = bool
 }
 
 variable "client_sku_tier" {
-  default = ""
+  default  = ""
   nullable = false
-  type = string
+  type     = string
 }
 
 variable "client_sku_size" {
-  default = ""
+  default  = ""
   nullable = false
-  type = string
+  type     = string
 }

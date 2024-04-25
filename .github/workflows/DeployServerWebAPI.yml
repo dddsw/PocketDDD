@@ -1,7 +1,6 @@
 name: Build and deploy Pocket DDD Server
 on:
   workflow_dispatch:
-  push:
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
