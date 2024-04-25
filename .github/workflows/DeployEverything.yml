@@ -109,6 +109,7 @@ jobs:
 
       - run: |
           cp PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.${{ inputs.env }}.json PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.Production.json
+        if: ${{ inputs.env != 'Production' }}
 
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
