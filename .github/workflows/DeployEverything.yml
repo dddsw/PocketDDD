@@ -103,7 +103,7 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
       - run: |
-          cp PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.${{ inputs.env }}.json PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.json
+          cp PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.${{ inputs.env }}.json PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.Production.json
 
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
