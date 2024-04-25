@@ -29,7 +29,7 @@ resource "cloudflare_zone" "dns_zone" {
 
 resource "cloudflare_record" "example" {
   zone_id = cloudflare_zone.dns_zone.id
-  name    = "pocketddd"
+  name    = local.subdomain
   value   = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
   ttl     = 3600
