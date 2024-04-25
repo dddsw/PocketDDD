@@ -21,3 +21,16 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
   value        = azurerm_static_web_app.blazor-client.api_key
   key_vault_id = azurerm_key_vault.key_vault.id
 }
+
+resource "cloudflare_zone" "dns_zone" {
+  account_id = var.cloudflare_account_id
+  zone       = "dddsouthwest.com"
+}
+
+resource "cloudflare_record" "example" {
+  zone_id = cloudflare_zone.dns_zone.id
+  name    = "pocketddd"
+  value   = azurerm_static_web_app.blazor-client.default_host_name
+  type    = "CNAME"
+  ttl     = 3600
+}
