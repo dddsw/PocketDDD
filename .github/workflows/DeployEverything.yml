@@ -104,8 +104,8 @@ jobs:
       - name: Set environment variables for environment
         run: |
           apiUrl=$(az webapp config hostname list --resource-group pocketddd-${{ inputs.env }}-rg --webapp-name pocketddd-${{ inputs.env }}-api-server-web-app --query "[0].name" -o tsv)
-          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --environment-name $environmentName --setting-names fakeBackend=false apiUrl=$apiUrl
-          
+          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --setting-names fakeBackend=false apiUrl=$apiUrl
+
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
           echo "WEB_APP_API_TOKEN=$apiToken" >> "$GITHUB_ENV"
