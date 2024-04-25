@@ -108,11 +108,6 @@ jobs:
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
-      - name: Set environment variables for environment
-        run: |
-          apiUrl=$(az webapp config hostname list --resource-group pocketddd-${{ inputs.env }}-rg --webapp-name pocketddd-${{ inputs.env }}-api-server-web-app --query "[0].name" -o tsv)
-          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --setting-names fakeBackend=false apiUrl='https://$apiUrl/api/'
-
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
           echo "WEB_APP_API_TOKEN=$apiToken" >> "$GITHUB_ENV"
@@ -130,12 +125,3 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "wwwroot" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-
-      # - name: Set environment variables for environment
-      #   run: |
-      #     environmentName=$(az staticwebapp environment list -n pocketddd-${{ inputs.env }}-blazorclient --query "[1].name" -o tsv)
-
-      #     apiUrl=$(az staticwebapp appsettings list -n pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiUrl" -o tsv)
-
-      #     az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --environment-name $environmentName --setting-names fakeBackend=false apiUrl=$apiUrl
-
