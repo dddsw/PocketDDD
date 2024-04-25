@@ -40,17 +40,7 @@ jobs:
     - run: |
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
 
-        terraform plan --var-file ../tfvars/${{ inputs.env }}.tfvars -detailed-exitcode
-
-        # Tests whether there are any changes to make, see: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        echo 'Exit Code: $?'
-        echo $?
-        
-        exitCode=$?
-        if [ $exitCode -eq 2 ]; then
-          echo 'Change detected, applying'
-          terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
-        fi
+        terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
       env:
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
 
