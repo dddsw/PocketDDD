@@ -88,13 +88,13 @@ public class SessionizeService
                     SessionizeId = item.id,
                     EventDetail = dbEvent,
                     SpeakerToken = Guid.NewGuid(),
-                    FullDescription = ""
+                    ShortDescription = ""
                 };
                 dbContext.Sessions.Add(dbSession);
             }
 
             dbSession.Title = item.title;
-            dbSession.ShortDescription = item.description;
+            dbSession.FullDescription = item.description;
             dbSession.Speaker = GetSpeakers(speakers, item.speakers);
             dbSession.Track = dbTracks.Single(x => x.SessionizeId == item.roomId);
             dbSession.TimeSlot = GetTimeSlot(dbTimeSlots, item.startsAt, item.endsAt);
