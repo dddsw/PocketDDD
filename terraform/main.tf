@@ -55,4 +55,19 @@ resource "azurerm_key_vault" "key_vault" {
       "Get",
     ]
   }
+
+  access_policy = {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "a3c87bb8-7a90-4775-981c-d450d4baede2"
+
+    key_permissions = [ ]
+
+    secret_permissions = [
+      "Get",
+      "List",
+      "Purge",
+    ]
+
+    storage_permissions = [ ]
+  }
 }
