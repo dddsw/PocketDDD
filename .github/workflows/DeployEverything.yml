@@ -39,7 +39,7 @@ jobs:
       uses: hashicorp/setup-terraform@v3
     - run: |
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
-        
+
         terraform plan --var-file ../tfvars/${{ inputs.env }}.tfvars -detailed-exitcode
 
         # Tests whether there are any changes to make, see: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
@@ -111,7 +111,7 @@ jobs:
       - name: Set environment variables for environment
         run: |
           apiUrl=$(az webapp config hostname list --resource-group pocketddd-${{ inputs.env }}-rg --webapp-name pocketddd-${{ inputs.env }}-api-server-web-app --query "[0].name" -o tsv)
-          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --setting-names fakeBackend=false apiUrl=$apiUrl
+          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --setting-names fakeBackend=false apiUrl='https://$apiUrl/api/'
 
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)
