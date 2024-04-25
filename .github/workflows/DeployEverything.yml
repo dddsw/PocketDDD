@@ -4,7 +4,7 @@ on:
     inputs:
       env:
         required: true
-        default: "dev"
+        default: "Test"
         type: string
     secrets:
       AZURE_CREDENTIALS:
