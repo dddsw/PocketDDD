@@ -113,17 +113,16 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          deployment_environment: ${{ inputs.env }}
           app_location: "/PocketDDD.BlazorClient/PocketDDD.BlazorClient" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "wwwroot" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
-      - name: Set environment variables for environment
-        run: |
-          environmentName=$(az staticwebapp environment list -n pocketddd-${{ inputs.env }}-blazorclient --query "[1].name" -o tsv)
+      # - name: Set environment variables for environment
+      #   run: |
+      #     environmentName=$(az staticwebapp environment list -n pocketddd-${{ inputs.env }}-blazorclient --query "[1].name" -o tsv)
 
-          apiUrl=$(az staticwebapp appsettings list -n pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiUrl" -o tsv)
+      #     apiUrl=$(az staticwebapp appsettings list -n pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiUrl" -o tsv)
 
-          az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --environment-name $environmentName --setting-names fakeBackend=false apiUrl=$apiUrl
+      #     az staticwebapp appsettings set -n pocketddd-${{ inputs.env }}-blazorclient --environment-name $environmentName --setting-names fakeBackend=false apiUrl=$apiUrl
 

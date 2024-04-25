@@ -10,6 +10,8 @@ resource "azurerm_static_web_app" "blazor-client" {
     "apiUrl": "https://pocketddd-${ var.env }-api-server-web-app.azurewebsites.net/api/"
     "fakeBackend": "false"
   }
+
+  preview_environments_enabled = false
 }
 
 resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
