@@ -13,6 +13,10 @@ on:
         required: true
       TERRAFORM_STATE_ACCESS_KEY:
         required: true
+      CLOUDFLARE_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
@@ -40,9 +44,10 @@ jobs:
     - run: |
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
 
-        terraform apply -auto-approve --var-file ../tfvars/${{ inputs.env }}.tfvars
+        terraform apply -auto-approve -var-file ../tfvars/${{ inputs.env }}.tfvars -var 'cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
       env:
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
 
   build_api_server:
     runs-on: ubuntu-latest
@@ -104,6 +109,7 @@ jobs:
 
       - run: |
           cp PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.${{ inputs.env }}.json PocketDDD.BlazorClient/PocketDDD.BlazorClient/wwwroot/appsettings.Production.json
+        if: ${{ inputs.env != 'Production' }}
 
       - run: |
           apiToken=$(az staticwebapp secrets list --name pocketddd-${{ inputs.env }}-blazorclient --query "properties.apiKey" -o tsv)

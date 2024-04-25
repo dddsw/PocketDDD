@@ -27,6 +27,11 @@
         Blazor.start({
             environment: "Development"
         });
+    } else if (window.location.hostname.includes("test2")) {
+        console.info("Env = Test2")
+        Blazor.start({
+            environment: "Test2"
+        });
     } else if (window.location.hostname.includes("test")) {
         console.info("Env = Test")
         Blazor.start({
