@@ -6,7 +6,7 @@ on:
       - 'fixProdDeployment'
 
 jobs:
-  deploy_to_test:
+  deploy_to_production:
     uses: ./.github/workflows/DeployEverything.yml
     with:
       env: "Production"
