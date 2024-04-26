@@ -9,8 +9,8 @@ public static class EventDataMapper
         eventData.TimeSlots.Select(ts => new TimeSlot
         {
             Id = ts.Id,
-            From = ts.From,
-            To = ts.To,
+            From = ts.From.LocalDateTime,
+            To = ts.To.LocalDateTime,
             Info = ts.Info,
             Sessions = eventData.Sessions
                                 .Where(s => s.TimeSlotId == ts.Id)

@@ -15,8 +15,8 @@ public static class SessionReducer
                 Detail = action.Session.FullDescription,
                 SpeakerName = action.Session.Speaker,
 
-                From = action.TimeSlot.From,
-                To = action.TimeSlot.To,
+                From = action.TimeSlot.From.LocalDateTime,
+                To = action.TimeSlot.To.LocalDateTime,
 
                 TrackName = action.Track.Name,
                 RoomName = action.Track.RoomName,
