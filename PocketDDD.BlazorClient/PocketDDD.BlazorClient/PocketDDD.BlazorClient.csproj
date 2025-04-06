@@ -1,28 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-	<PropertyGroup>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-		<LangVersion>default</LangVersion>
-		<TargetFramework>net8.0</TargetFramework>
-	</PropertyGroup>
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+        <LangVersion>default</LangVersion>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MudBlazor" Version="6.2.2" />
-		<PackageReference Include="Fluxor.Blazor.Web" Version="6.6.0" />
-		<PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.14" PrivateAssets="all" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Fluxor.Blazor.Web" Version="6.6.0"/>
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.14"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.14" PrivateAssets="all"/>
+        <PackageReference Include="MudBlazor" Version="7.16.0"/>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\..\PocketDDD.Shared\PocketDDD.Shared.csproj" />
-	  <ProjectReference Include="..\PocketDDD.BlazorClient.LocalStorage\PocketDDD.BlazorClient.LocalStorage.csproj" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\PocketDDD.Shared\PocketDDD.Shared.csproj"/>
+        <ProjectReference Include="..\PocketDDD.BlazorClient.LocalStorage\PocketDDD.BlazorClient.LocalStorage.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+    </ItemGroup>
 
 </Project>

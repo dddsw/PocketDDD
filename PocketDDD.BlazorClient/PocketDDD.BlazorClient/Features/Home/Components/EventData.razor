@@ -1,14 +1,12 @@
-﻿@using PocketDDD.BlazorClient.Features.Home.Store;
-@using System.Text.Json;
-@using PocketDDD.BlazorClient.Features.Session.Store;
+﻿@using PocketDDD.BlazorClient.Features.Home.Store
 @inherits FluxorComponent
 
 @inject NavigationManager NavigationManager
 @inject IState<HomeState> State
 @inject IDispatcher Dispatcher
 
-<MudList Clickable="true">
-    @foreach(var timeSlot in State.Value.EventMetaData)
+<MudList T="(Session session, int index)" ReadOnly="false">
+    @foreach (var timeSlot in State.Value.EventMetaData)
     {
         <MudListSubheader Class="pb-0 pl-1 border-b border-solid mud-border-primary">
             <MudText Typo="Typo.h6">
@@ -16,18 +14,19 @@
                 @timeSlot.From.ToString("tt").ToLowerInvariant()
             </MudText>
         </MudListSubheader>
-        @if(timeSlot.Info is not null)
+        @if (timeSlot.Info is not null)
         {
-            <MudListItem Class="ml-6">
+            <MudListItem T="(Session session, int index)" Class="ml-6">
                 <MudText Typo="Typo.h5">@timeSlot.Info</MudText>
             </MudListItem>
         }
-        @foreach(var sessionItem in timeSlot.Sessions.Select((session, index) => (session, index)))
+
+        @foreach (var sessionItem in timeSlot.Sessions.Select((session, index) => (session, index)))
         {
-            <MudListItem OnClick="() => HandleViewSession(sessionItem.session.Id)">
+            <MudListItem T="(Session session, int index)" OnClick="() => HandleViewSession(sessionItem.session.Id)">
                 <MudPaper Class="pa-4">
                     <MudText Typo="Typo.subtitle1">
-                        @WhenBookmarkedShowIcon(sessionItem.session) 
+                        @WhenBookmarkedShowIcon(sessionItem.session)
                         @sessionItem.session.Title
                     </MudText>
                     <MudText Typo="Typo.subtitle2">@sessionItem.session.SpeakerName</MudText>
@@ -35,9 +34,9 @@
                 </MudPaper>
             </MudListItem>
 
-            @if (sessionItem.index != timeSlot.Sessions.Count -1)
+            @if (sessionItem.index != timeSlot.Sessions.Count - 1)
             {
-                <MudDivider />
+                <MudDivider/>
             }
         }
     }
@@ -45,10 +44,12 @@
 </MudList>
 
 @code{
-    RenderFragment? WhenBookmarkedShowIcon(Features.Home.Store.Session session) =>
+
+    RenderFragment? WhenBookmarkedShowIcon(Session session) =>
         session.IsBookmarked
-            ? @<MudIcon Icon="@Icons.Material.Filled.Bookmark" Title="Bookmarked" />
+            ? @<MudIcon Icon="@Icons.Material.Filled.Bookmark" Title="Bookmarked"/>
             : null;
+
 }
 
 @code {

@@ -1,32 +1,40 @@
-﻿@using PocketDDD.BlazorClient.Features.HeaderBar.Store;
-
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@using PocketDDD.BlazorClient.Features.HeaderBar.Store
+@inherits FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<HeaderBarState> State
 
-<MudAppBar Dense="true" DisableGutters="true" Class="pl-1">
+<MudAppBar Dense="true" Gutters="false" Class="pl-1">
     @if (State.Value.ShowBackButton)
     {
-        <MudIconButton 
+        <MudIconButton
             Icon="@Icons.Material.Filled.ArrowBack"
             OnClick="HandleNavigateBack"
             Class="pl-0"/>
     }
 
     <MudText Typo="Typo.h6" Class="pl-0">@State.Value.Title</MudText>
-    <MudSpacer />
-    
+    <MudSpacer/>
+
     @if (State.Value.ShowFeedbackButton)
     {
         <MudIconButton
             Icon="@Icons.Material.Filled.TagFaces"
-            OnClick="HandleShowEventFeedback" />
+            OnClick="HandleShowEventFeedback"/>
     }
 
 </MudAppBar>
 
 @code {
-    void HandleShowEventFeedback() => Dispatcher.Dispatch(new ViewFeedbackAction());
-    void HandleNavigateBack() => Dispatcher.Dispatch(new NavigateBackAction());
+
+    void HandleShowEventFeedback()
+    {
+        Dispatcher.Dispatch(new ViewFeedbackAction());
+    }
+
+    void HandleNavigateBack()
+    {
+        Dispatcher.Dispatch(new NavigateBackAction());
+    }
+
 }
