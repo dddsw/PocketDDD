@@ -1,10 +1,9 @@
 ﻿@page "/session/{id:int}"
 
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
-
-@using PocketDDD.BlazorClient.Features.HeaderBar.Store;
+@using PocketDDD.BlazorClient.Features.HeaderBar.Store
 @using PocketDDD.BlazorClient.Features.Session.Store
-@using PocketDDD.BlazorClient.Features.SessionFeedback.Store;
+@using PocketDDD.BlazorClient.Features.SessionFeedback.Components
+@inherits FluxorComponent
 
 @inject IState<SessionState> State
 @inject IDispatcher Dispatcher
@@ -33,22 +32,21 @@
         </MudCardContent>
     </MudCard>
 
-    <MudFab 
+    <MudFab
         Color="@State.Value.Session.BookmarkColor"
         Size="Size.Large"
         StartIcon="@State.Value.Session.BookmarkIcon"
         Style="position:fixed; right:10px; bottom:10px"
-        OnClick="HandleToggleSessionBookmarked" />
+        OnClick="HandleToggleSessionBookmarked"/>
 }
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    [Parameter] public int Id { get; set; }
 
     protected override void OnInitialized()
     {
         SubscribeToAction<NavigateBackAction>(_ => HandleNavigateHome());
-        SubscribeToAction<ViewFeedbackAction>(_ => HandleShowSessionFeedback());
+        SubscribeToAction<ViewFeedbackAction>(async _ => await HandleShowSessionFeedbackAsync());
 
         base.OnInitialized();
     }
@@ -60,7 +58,10 @@
         base.OnParametersSet();
     }
 
-    void HandleNavigateHome() => Navigation.NavigateTo("/", false, true);
+    void HandleNavigateHome()
+    {
+        Navigation.NavigateTo("/", false, true);
+    }
 
     void HandleToggleSessionBookmarked()
     {
@@ -71,11 +72,12 @@
         Dispatcher.Dispatch(new ToggleBookmarkedAction(session.Id, !session.IsBookmarked));
     }
 
-    void HandleShowSessionFeedback()
+    async Task HandleShowSessionFeedbackAsync()
     {
-        Dialog.Show<Features.SessionFeedback.Components.SessionFeedback>(
-            "", 
+        await Dialog.ShowAsync<SessionFeedback>(
+            "",
             new DialogParameters { ["Id"] = Id },
             new DialogOptions { FullScreen = true });
     }
+
 }

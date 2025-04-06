@@ -1,7 +1,6 @@
-﻿@using PocketDDD.BlazorClient.Features.EventScore.Store;
+﻿@using PocketDDD.BlazorClient.Features.EventScore.Store
 @using PocketDDD.BlazorClient.Features.Sync.Components
-
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inherits FluxorComponent
 
 @inject IState<EventScoreState> State
 @inject IDispatcher Dispatcher
@@ -11,17 +10,19 @@
         Size="Size.Large"
         Label="@State.Value.Score.ToString()"
         Style="position:fixed; right:10px; bottom:10px"
-        OnClick="HandleViewSyncStatus" />
+        OnClick="HandleViewSyncStatusAsync"/>
 
 @code {
+
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new FetchExistingEventScoreAction());
         base.OnInitialized();
     }
 
-    void HandleViewSyncStatus()
+    async Task HandleViewSyncStatusAsync()
     {
-        Dialog.Show<SyncStatus>("", new DialogOptions { FullScreen = true });
+        await Dialog.ShowAsync<SyncStatus>("", new DialogOptions { FullScreen = true });
     }
+
 }

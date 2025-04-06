@@ -1,12 +1,13 @@
-﻿@using Microsoft.AspNetCore.Components
-@using PocketDDD.BlazorClient.Features.SessionFeedback.Store;
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+﻿@using PocketDDD.BlazorClient.Features.SessionFeedback.Store
+@inherits FluxorComponent
 
 @inject IState<SessionFeedbackState> State
 @inject IDispatcher Dispatcher
 
 <MudDialog>
-    <TitleContent><MudText Typo="Typo.h6" Align="Align.Center">Session Feedback</MudText></TitleContent>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Align="Align.Center">Session Feedback</MudText>
+    </TitleContent>
     <DialogContent>
 
         <MudCard>
@@ -23,17 +24,20 @@
         <MudCard Class="mt-3">
             <MudCardContent>
                 <MudText Typo="Typo.h6">Speaker's Knowledge:</MudText>
-                <MudRating SelectedValue="@_speakersKnowledge" SelectedValueChanged="newValue => { _speakersKnowledge = newValue; HandleDataChanged();}" />
-                
+                <MudRating SelectedValue="@_speakersKnowledge"
+                           SelectedValueChanged="newValue => { _speakersKnowledge = newValue; HandleDataChanged();}"/>
+
                 <MudText Typo="Typo.h6">Speaking Skills:</MudText>
-                <MudRating SelectedValue="@_speakingSkills" SelectedValueChanged="newValue => { _speakingSkills = newValue; HandleDataChanged();}" />
-                
+                <MudRating SelectedValue="@_speakingSkills"
+                           SelectedValueChanged="newValue => { _speakingSkills = newValue; HandleDataChanged();}"/>
+
                 <MudText Typo="Typo.h6">Comments:</MudText>
                 <MudText Typo="Typo.body2">
-                    <MudTextField Value="_comments" ValueChanged="(string newText) => { _comments = newText; HandleDataChanged();}"
-                        Immediate="true"
-                        Variant="Variant.Text"
-                        Lines="3">
+                    <MudTextField Value="_comments"
+                                  ValueChanged="(string newText) => { _comments = newText; HandleDataChanged();}"
+                                  Immediate="true"
+                                  Variant="Variant.Text"
+                                  Lines="3">
                     </MudTextField>
                 </MudText>
             </MudCardContent>
@@ -42,7 +46,7 @@
 </MudDialog>
 
 <MudAppBar Bottom="true" Fixed="true" Color="Color.Transparent" Elevation="1">
-    <MudButton 
+    <MudButton
         Variant="Variant.Filled"
         Color="Color.Secondary"
         FullWidth="true"
@@ -55,29 +59,31 @@
         Color="Color.Primary"
         FullWidth="true"
         OnClick="HandleSubmit"
-        Disabled="!isDirty">
+        Disabled="!_isDirty">
         Submit
     </MudButton>
 </MudAppBar>
 
 @code {
+
     RenderFragment? WhenFeedbackAlreadySubmittedShowWarning() => State.Value.TimeSlotAlreadyHasFeedback
         ? @<MudAlert Severity="Severity.Warning">
-            You have already submitted feedback for a session at this time!<br />
-            You are welcome to submit this feedback, but it won't get you anymore points!
-           </MudAlert>
-    : null;
+              You have already submitted feedback for a session at this time!<br/>
+              You are welcome to submit this feedback, but it won't get you anymore points!
+          </MudAlert>
+        : null;
+
 }
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
     [Parameter] public int Id { get; set; }
 
-    int _speakersKnowledge = 0;
-    int _speakingSkills = 0;
+    int _speakersKnowledge;
+    int _speakingSkills;
     string _comments = string.Empty;
 
-    bool isDirty = false;
+    bool _isDirty;
 
     protected override void OnInitialized()
     {
@@ -99,7 +105,7 @@
         _comments = action.Feedback.Comments;
     }
 
-    void HandleDataChanged() => isDirty = true;
+    void HandleDataChanged() => _isDirty = true;
 
     void HandleSubmit()
     {
@@ -120,4 +126,5 @@
     {
         MudDialog.Cancel();
     }
+
 }

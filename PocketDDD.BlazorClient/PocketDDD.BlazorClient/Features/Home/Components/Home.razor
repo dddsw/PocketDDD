@@ -1,18 +1,14 @@
 ﻿@page "/"
-
-@using PocketDDD.BlazorClient.Features.EventScore.Components
-@using PocketDDD.BlazorClient.Features.HeaderBar.Store;
-@using PocketDDD.BlazorClient.Features.Sync.Store
-@using PocketDDD.BlazorClient.Services
-@using PocketDDD.BlazorClient.Features.Home.Store
 @using PocketDDD.BlazorClient.Features.EventFeedback.Components
-
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using PocketDDD.BlazorClient.Features.EventScore.Components
+@using PocketDDD.BlazorClient.Features.HeaderBar.Store
+@using PocketDDD.BlazorClient.Features.Home.Store
+@using PocketDDD.BlazorClient.Features.Sync.Store
+@inherits FluxorComponent
 
 @inject IState<HomeState> State
 @inject IDispatcher Dispatcher
 @inject IDialogService Dialog
-@inject LocalStorageContext LocalStorage
 
 @WhenLoadingAndNotFailedShowAlert()
 @WhenLoadingFailedShowCard()
@@ -21,39 +17,45 @@
 <EventScore></EventScore>
 
 @code {
+
     RenderFragment? WhenLoadingAndNotFailedShowAlert() => State.Value.Loading && !State.Value.FailedToLoad
         ? @<MudAlert Severity="Severity.Info">loading...</MudAlert>
         : null;
 
     RenderFragment? WhenLoadingFailedShowCard() => State.Value.Loading && State.Value.FailedToLoad
         ? @<MudCard>
-            <MudCardContent>
-                <MudText><h5>Failed to load data</h5></MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh">Retry</MudButton>
-            </MudCardActions>
+              <MudCardContent>
+                  <MudText><h5>Failed to load data</h5></MudText>
+              </MudCardContent>
+              <MudCardActions>
+                  <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh">
+                      Retry
+                  </MudButton>
+              </MudCardActions>
           </MudCard>
         : null;
+
 }
 
 @code {
+
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new SetHeaderBarTitleAction("DDDSW 2024"));
 
-        if(State.Value.Loading)
+        if (State.Value.Loading)
             Dispatcher.Dispatch(new LoadDataAction());
 
         Dispatcher.Dispatch(new SyncAction());
 
-        SubscribeToAction<ViewFeedbackAction>(_ => HandleShowEventFeedback());
+        SubscribeToAction<ViewFeedbackAction>(async _ => await HandleShowEventFeedbackAsync());
 
         base.OnInitialized();
     }
 
-    void HandleShowEventFeedback()
+    async Task HandleShowEventFeedbackAsync()
     {
-        Dialog.Show<EventFeedback>("", new DialogOptions { FullScreen = true });
+        await Dialog.ShowAsync<EventFeedback>("", new DialogOptions { FullScreen = true });
     }
+
 }

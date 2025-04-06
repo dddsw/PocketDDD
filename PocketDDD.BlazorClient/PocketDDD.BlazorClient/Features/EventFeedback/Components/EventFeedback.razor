@@ -1,12 +1,12 @@
 ﻿@using PocketDDD.BlazorClient.Features.EventFeedback.Store
-@using Microsoft.AspNetCore.Components
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inherits FluxorComponent
 
-@inject IState<EventFeedbackState> State
 @inject IDispatcher Dispatcher
 
 <MudDialog>
-    <TitleContent><MudText Typo="Typo.h6" Align="Align.Center">Event Feedback</MudText></TitleContent>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Align="Align.Center">Event Feedback</MudText>
+    </TitleContent>
     <DialogContent>
 
         <MudCard>
@@ -22,20 +22,24 @@
         <MudCard Class="mt-3">
             <MudCardContent>
                 <MudText Typo="Typo.h6">Refreshments:</MudText>
-                <MudRating SelectedValue="@_refreshments" SelectedValueChanged="newValue => { _refreshments = newValue; HandleDataChanged();}" />
-                
+                <MudRating SelectedValue="@_refreshments"
+                           SelectedValueChanged="newValue => { _refreshments = newValue; HandleDataChanged();}"/>
+
                 <MudText Typo="Typo.h6">Venue:</MudText>
-                <MudRating SelectedValue="@_venue" SelectedValueChanged="newValue => { _venue = newValue; HandleDataChanged();}" />
-                
+                <MudRating SelectedValue="@_venue"
+                           SelectedValueChanged="newValue => { _venue = newValue; HandleDataChanged();}"/>
+
                 <MudText Typo="Typo.h6">Overall:</MudText>
-                <MudRating SelectedValue="@_overall" SelectedValueChanged="newValue => { _overall = newValue; HandleDataChanged();}" />
+                <MudRating SelectedValue="@_overall"
+                           SelectedValueChanged="newValue => { _overall = newValue; HandleDataChanged();}"/>
 
                 <MudText Typo="Typo.h6">Comments:</MudText>
                 <MudText Typo="Typo.body2">
-                    <MudTextField Value="_comments" ValueChanged="(string newText) => { _comments = newText; HandleDataChanged();}"
-                        Immediate="true"
-                        Variant="Variant.Text"
-                        Lines="3">
+                    <MudTextField Value="_comments"
+                                  ValueChanged="(string newText) => { _comments = newText; HandleDataChanged();}"
+                                  Immediate="true"
+                                  Variant="Variant.Text"
+                                  Lines="3">
                     </MudTextField>
                 </MudText>
             </MudCardContent>
@@ -44,7 +48,7 @@
 </MudDialog>
 
 <MudAppBar Bottom="true" Fixed="true" Color="Color.Transparent" Elevation="1">
-    <MudButton 
+    <MudButton
         Variant="Variant.Filled"
         Color="Color.Secondary"
         FullWidth="true"
@@ -57,20 +61,20 @@
         Color="Color.Primary"
         FullWidth="true"
         OnClick="HandleSubmit"
-        Disabled="!isDirty">
+        Disabled="!_isDirty">
         Submit
     </MudButton>
 </MudAppBar>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
 
-    int _refreshments = 0;
-    int _venue = 0;
-    int _overall = 0;
+    int _refreshments;
+    int _venue;
+    int _overall;
     string _comments = string.Empty;
 
-    bool isDirty = false;
+    bool _isDirty;
 
     protected override void OnInitialized()
     {
@@ -93,7 +97,10 @@
         _comments = action.Feedback.Comments;
     }
 
-    void HandleDataChanged() => isDirty = true;
+    void HandleDataChanged()
+    {
+        _isDirty = true;
+    }
 
     void HandleSubmit()
     {
@@ -114,4 +121,5 @@
     {
         MudDialog.Cancel();
     }
+
 }

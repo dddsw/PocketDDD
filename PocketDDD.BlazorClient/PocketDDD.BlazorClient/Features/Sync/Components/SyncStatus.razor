@@ -1,5 +1,5 @@
 ﻿@using PocketDDD.BlazorClient.Features.Sync.Store
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inherits FluxorComponent
 
 @inject IState<SyncState> State
 @inject IDispatcher Dispatcher
@@ -21,7 +21,7 @@
                 <MudText Typo="Typo.subtitle1">@State.Value.EventScore</MudText>
             </MudCardContent>
         </MudCard>
-        
+
         <MudCard Class="mt-2">
             <MudCardContent>
                 <MudText Typo="Typo.caption">Outstanding Sync Items</MudText>
@@ -44,7 +44,7 @@
         OnClick="HandleClose">
         Close
     </MudButton>
-    <MudButton 
+    <MudButton
         Class="ml-2"
         Variant="Variant.Filled"
         Color="Color.Primary"
@@ -56,13 +56,16 @@
 </MudAppBar>
 
 @code {
+
     RenderFragment? WhenSyncingShowSyncAlert() => State.Value.IsSyncing
-        ? @<MudAlert Class="mt-2" Severity="Severity.Info" Icon="@Icons.Material.Filled.CloudSync"> Syncing...</MudAlert>
+        ? @<MudAlert Class="mt-2" Severity="Severity.Info" Icon="@Icons.Material.Filled.CloudSync"> Syncing...
+          </MudAlert>
         : null;
+
 }
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
 
     protected override void OnInitialized()
     {
@@ -79,4 +82,5 @@
     {
         MudDialog.Cancel();
     }
+
 }

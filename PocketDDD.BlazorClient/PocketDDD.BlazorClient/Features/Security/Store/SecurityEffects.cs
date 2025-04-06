@@ -1,38 +1,23 @@
-﻿using System.Net.Http.Json;
-using Blazored.LocalStorage;
-using Fluxor;
+﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using PocketDDD.BlazorClient.Features.EventScore.Store;
-using PocketDDD.BlazorClient.Features.Home.Store;
+using PocketDDD.BlazorClient.Features.Security.Components;
 using PocketDDD.BlazorClient.Services;
-using static MudBlazor.CategoryTypes;
 
 namespace PocketDDD.BlazorClient.Features.Security.Store;
 
-public class SecurityEffects
+public class SecurityEffects(
+    LocalStorageContext localStorage,
+    IPocketDDDApiService pocketDddapi,
+    IDialogService dialog,
+    NavigationManager navigationManager)
 {
-    private readonly IState<SecurityState> _state;
-    private readonly LocalStorageContext _localStorage;
-    private readonly IPocketDDDApiService _pocketDDDAPI;
-    private readonly IDialogService _dialog;
-    private readonly NavigationManager _navigationManager;
-    private IDialogReference? currentDialogReference = null; 
-
-    public SecurityEffects(IState<SecurityState> state, LocalStorageContext localStorage, 
-            IPocketDDDApiService pocketDDDAPI, IDialogService dialog, NavigationManager navigationManager)
-    {
-        _state = state;
-        _localStorage = localStorage;
-        _pocketDDDAPI = pocketDDDAPI;
-        _dialog = dialog;
-        _navigationManager = navigationManager;
-    }
+    private IDialogReference? _currentDialogReference;
 
     [EffectMethod]
     public async Task OnCheckUser(CheckUserAction action, IDispatcher dispatcher)
     {
-        var user = await _localStorage.CurrentUser.GetAsync();
+        var user = await localStorage.CurrentUser.GetAsync();
 
         if (user is not null)
         {
@@ -40,8 +25,7 @@ public class SecurityEffects
             return;
         }
 
-        if (currentDialogReference is null)
-            currentDialogReference = _dialog.Show<Features.Security.Components.Login>("", new DialogOptions { FullScreen = true });
+        _currentDialogReference ??= await dialog.ShowAsync<Login>("", new DialogOptions { FullScreen = true });
     }
 
     [EffectMethod]
@@ -49,11 +33,11 @@ public class SecurityEffects
     {
         try
         {
-            var result = await _pocketDDDAPI.Login(action.LoginName);
+            var result = await pocketDddapi.Login(action.LoginName);
             ArgumentNullException.ThrowIfNull(result, nameof(result));
 
-            await _localStorage.CurrentUser.SetAsync(result);
-            await _localStorage.EventScore.SetAsync(1);
+            await localStorage.CurrentUser.SetAsync(result);
+            await localStorage.EventScore.SetAsync(1);
 
             dispatcher.Dispatch(new SetLoginSuccessAction(result));
         }
@@ -68,22 +52,22 @@ public class SecurityEffects
     {
         dispatcher.Dispatch(new SetCurrentUserAction(action.User));
 
-        currentDialogReference?.Close();
-        currentDialogReference = null;
+        _currentDialogReference?.Close();
+        _currentDialogReference = null;
         return Task.CompletedTask;
     }
 
     [EffectMethod]
     public Task OnLoginSuccess(SetCurrentUserAction action, IDispatcher dispatcher)
     {
-        _pocketDDDAPI.SetUserAuthToken(action.User.Token);
+        pocketDddapi.SetUserAuthToken(action.User.Token);
         return Task.CompletedTask;
     }
 
     [EffectMethod]
     public async Task DeleteAllDataAndLogOut(DeleteAllDataAndLogOutAction action, IDispatcher dispatcher)
     {
-        await _localStorage.DeleteAllDataAsync();
-        _navigationManager.NavigateTo("/", true);
+        await localStorage.DeleteAllDataAsync();
+        navigationManager.NavigateTo("/", true);
     }
 }
