@@ -28,7 +28,7 @@ data "cloudflare_zone" "dns_zone" {
 resource "cloudflare_record" "cname_record" {
   zone_id = data.cloudflare_zone.dns_zone.id
   name    = local.subdomain
-  value   = azurerm_static_web_app.blazor-client.default_host_name
+  content = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
   ttl     = 3600
 }
