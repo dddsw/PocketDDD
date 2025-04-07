@@ -35,7 +35,7 @@ data "cloudflare_zone" "dns_zone" {
 
 data "cloudflare_record" "cname_record" {
   zone_id  = data.cloudflare_zone.dns_zone.id
-  hostname = azurerm_static_web_app.blazor-client.default_host_name
+  hostname = "${local.subdomain}.dddsouthwest.com"
 }
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
