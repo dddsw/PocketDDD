@@ -39,13 +39,13 @@ resource "azurerm_static_web_app_custom_domain" "custom_domain" {
   validation_type   = "cname-delegation"
 }
 
-# data "cloudflare_record" "cname_record" {
-#   zone_id  = data.cloudflare_zone.dns_zone.id
-#   hostname = "${local.subdomain}.dddsouthwest.com"
-# }
+data "cloudflare_record" "cname_record" {
+  zone_id  = data.cloudflare_zone.dns_zone.id
+  hostname = "${local.subdomain}.dddsouthwest.com"
+}
 
-# resource "azurerm_static_web_app_custom_domain" "custom_domain" {
-#   static_web_app_id = azurerm_static_web_app.blazor-client.id
-#   domain_name       = "${data.cloudflare_record.cname_record.hostname}"
-#   validation_type   = "cname-delegation"
-# }
+resource "azurerm_static_web_app_custom_domain" "custom_domain" {
+  static_web_app_id = azurerm_static_web_app.blazor-client.id
+  domain_name       = "${data.cloudflare_record.cname_record.hostname}"
+  validation_type   = "cname-delegation"
+}
