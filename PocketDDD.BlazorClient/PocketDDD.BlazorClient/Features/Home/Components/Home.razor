@@ -40,7 +40,7 @@
 @code {
     protected override void OnInitialized()
     {
-        Dispatcher.Dispatch(new SetHeaderBarTitleAction($"DDDSW {DateTime.UtcNow.Year}"));
+        Dispatcher.Dispatch(new SetHeaderBarTitleAction($"DDD South West {DateTime.UtcNow.Year}"));
 
         if(State.Value.Loading)
             Dispatcher.Dispatch(new LoadDataAction());
