@@ -42,5 +42,5 @@ variable "client_sku_size" {
 
 variable "cloudflare_account_id" {
   nullable = false
-  type = string
+  type     = string
 }

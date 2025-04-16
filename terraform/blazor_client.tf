@@ -7,8 +7,8 @@ resource "azurerm_static_web_app" "blazor-client" {
   sku_size = var.client_sku_size
 
   app_settings = {
-    "apiUrl": "https://pocketddd-${ var.env }-api-server-web-app.azurewebsites.net/api/"
-    "fakeBackend": "false"
+    "apiUrl" : "https://pocketddd-${var.env}-api-server-web-app.azurewebsites.net/api/"
+    "fakeBackend" : "false"
   }
 
   preview_environments_enabled = false
@@ -35,6 +35,6 @@ resource "cloudflare_record" "cname_record" {
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
   static_web_app_id = azurerm_static_web_app.blazor-client.id
-  domain_name       = "${cloudflare_record.cname_record.hostname}"
+  domain_name       = cloudflare_record.cname_record.hostname
   validation_type   = "cname-delegation"
 }
