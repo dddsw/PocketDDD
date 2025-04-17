@@ -55,7 +55,7 @@ public class SessionizeEvent
 
 public class Session
 {
-    public int id { get; set; }
+    public string id { get; set; }
     public string title { get; set; }
     public string description { get; set; }
     public DateTime startsAt { get; set; }
