@@ -60,7 +60,7 @@ resource "azurerm_key_vault" "key_vault" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = "4a9cec89-cee2-44fb-978f-6ded96b60d31"
 
-    key_permissions = [ ]
+    key_permissions = []
 
     secret_permissions = [
       "Get",
@@ -68,6 +68,6 @@ resource "azurerm_key_vault" "key_vault" {
       "Purge",
     ]
 
-    storage_permissions = [ ]
+    storage_permissions = []
   }
 }
