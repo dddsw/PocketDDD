@@ -3,29 +3,30 @@ using PocketDDD.Server.DB;
 using PocketDDD.Server.Services;
 using PocketDDD.Server.WebAPI.Authentication;
 
-string corsPolicy = "corsPolicy";
+var corsPolicy = "corsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy,
-    builder =>
-    {
-        builder.AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowAnyOrigin();
-    });
+        builder =>
+        {
+            builder.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        });
 });
 
 builder.Services.AddDbContext<PocketDDDContext>(
-    options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext"));
+    options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext")
+);
 
 builder.Services.AddScoped<RegistrationService>();
 builder.Services.AddScoped<UserService>();
@@ -37,7 +38,10 @@ builder.Services.AddScoped<SpeakersService>();
 builder.Services.AddHttpClient<SessionizeService>();
 
 builder.Services.AddAuthentication()
-                .AddScheme<UserIsRegisteredOptions, UserIsRegisteredAuthHandler>(UserIsRegisteredAuthHandler.SchemeName, null);
+    .AddScheme<UserIsRegisteredOptions, UserIsRegisteredAuthHandler>(UserIsRegisteredAuthHandler.SchemeName, null);
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<PocketDDDContext>();
 
 var app = builder.Build();
 
@@ -55,5 +59,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 app.Run();

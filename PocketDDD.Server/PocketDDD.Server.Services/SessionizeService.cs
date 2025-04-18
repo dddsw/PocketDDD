@@ -5,6 +5,7 @@ using PocketDDD.Server.Model.Sessionize;
 using System.Net.Http.Json;
 
 namespace PocketDDD.Server.Services;
+
 public class SessionizeService
 {
     private readonly HttpClient httpClient;
@@ -50,7 +51,8 @@ public class SessionizeService
 
         var dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
         var sessionizeTimeSlots = sessionizeEvent.sessions
-            .Select(x => (x.startsAt, x.endsAt))
+            .Select(x => (x.startsAt, x.endsAt, x.isServiceSession,
+                serviceSessionDetails: x.isServiceSession ? x.title : null))
             .Distinct()
             .ToList();
 
@@ -64,7 +66,7 @@ public class SessionizeService
                     EventDetail = dbEvent,
                     From = item.startsAt,
                     To = item.endsAt,
-                    Info = null
+                    Info = item.isServiceSession ? item.serviceSessionDetails : null
                 };
                 dbContext.TimeSlots.Add(dbTimeSlot);
             }
@@ -80,12 +82,16 @@ public class SessionizeService
 
         foreach (var item in sessionizeEvent.sessions)
         {
-            var dbSession = dbSessions.SingleOrDefault(x => x.SessionizeId == item.id);
+            if (item.isServiceSession) continue;
+
+            var sessionizeId = int.Parse(item.id);
+
+            var dbSession = dbSessions.SingleOrDefault(x => x.SessionizeId == sessionizeId);
             if (dbSession == null)
             {
                 dbSession = new Model.DBModel.Session
                 {
-                    SessionizeId = item.id,
+                    SessionizeId = sessionizeId,
                     EventDetail = dbEvent,
                     SpeakerToken = Guid.NewGuid(),
                     ShortDescription = ""
@@ -103,10 +109,13 @@ public class SessionizeService
         await dbContext.SaveChangesAsync();
     }
 
-    private string GetSpeakers(List<PocketDDD.Server.Model.Sessionize.Speaker> speakers, List<string> speakerIds)
-        => speakerIds.Aggregate("", (acc, x) => acc + ", " + speakers.Single(s => s.id == x).fullName).Trim(',');
+    private string GetSpeakers(List<Speaker> speakers, List<string> speakerIds)
+    {
+        return speakerIds.Aggregate("", (acc, x) => acc + ", " + speakers.Single(s => s.id == x).fullName).Trim(',');
+    }
 
     private TimeSlot GetTimeSlot(List<TimeSlot> timeSlots, DateTime startsAt, DateTime endsAt)
-        => timeSlots.Single(x => x.From == startsAt && x.To == endsAt);
-
+    {
+        return timeSlots.Single(x => x.From == startsAt && x.To == endsAt);
+    }
 }
