@@ -1,6 +1,5 @@
-﻿@using PocketDDD.BlazorClient.Features.Home.Store;
-@using System.Text.Json;
-@using PocketDDD.BlazorClient.Features.Session.Store;
+﻿@using PocketDDD.BlazorClient.Features.Home.Store
+@using Session = PocketDDD.BlazorClient.Features.Home.Store.Session
 @inherits FluxorComponent
 
 @inject NavigationManager NavigationManager
@@ -53,4 +52,20 @@
 
 @code {
     void HandleViewSession(int sessionId) => NavigationManager.NavigateTo($"session/{sessionId}");
+
+    void HandleToggleSessionBookmarked(Session session)
+    {
+        Dispatcher.Dispatch(new ToggleBookmarkedAction(session.Id, !session.IsBookmarked));
+    }
+
+    private static string GetTimeSpanDisplayText(TimeSpan timeSpan)
+    {
+        if (timeSpan < TimeSpan.FromHours(1))
+        {
+            return $"{timeSpan.Minutes} minutes";
+        }
+
+        return timeSpan == TimeSpan.FromHours(1) ? "1 hour" : $"{timeSpan.TotalHours:F1} hours";
+    }
+
 }

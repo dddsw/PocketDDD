@@ -1,6 +1,5 @@
-﻿using Fluxor;
-using MudBlazor;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Fluxor;
 
 namespace PocketDDD.BlazorClient.Features.Home.Store;
 
@@ -30,30 +29,5 @@ public record Session
     public string TrackName { get; init; } = string.Empty;
     public string RoomName { get; init; } = string.Empty;
     public bool IsBookmarked { get; set; } = false;
-
-    public string? BookmarkIconIfBookmarked => IsBookmarked
-        ? Icons.Material.Filled.Bookmark
-        : null;
+    public TimeSpan Length { get; init; }
 }
-
-//export interface SessionItemVM
-//{
-//    session: SessionDTO, 
-//    track: TrackDTO
-//    isBookmarked: boolean;
-//}
-
-//export interface MetaDataVM
-//{
-//    timeSlots: TimeSlotVM[];
-//}
-
-//export interface TimeSlotVM
-//{
-//    id: number;
-//    from: Date;
-//    to: Date;
-//    info: string;
-
-//    sessions: SessionItemVM[];
-//}
