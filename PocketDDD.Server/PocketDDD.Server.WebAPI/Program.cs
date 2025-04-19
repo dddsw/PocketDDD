@@ -29,6 +29,8 @@ builder.Services.AddDbContext<PocketDDDContext>(
     options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext")
 );
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<RegistrationService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FeedbackService>();

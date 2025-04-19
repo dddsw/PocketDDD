@@ -25,6 +25,7 @@ public class FakePocketDDDApiService : IPocketDDDApiService
         return
             new EventDataResponseDTO
             {
+                Id = 1,
                 Version = 1,
                 TimeSlots = new[]
                 {
