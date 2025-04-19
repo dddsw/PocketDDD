@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PocketDDD.Shared.API.ResponseDTOs;
 
-namespace PocketDDD.Shared.API.ResponseDTOs;
 public record EventDataResponseDTO
 {
+    public int Id { get; init; }
     public int Version { get; set; }
     public IEnumerable<TimeSlotDTO> TimeSlots { get; set; } = Enumerable.Empty<TimeSlotDTO>();
     public IEnumerable<TrackDTO> Tracks { get; set; } = Enumerable.Empty<TrackDTO>();

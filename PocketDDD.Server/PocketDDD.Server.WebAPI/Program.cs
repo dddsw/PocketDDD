@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PocketDDD.Server.DB;
 using PocketDDD.Server.Services;
+using PocketDDD.Server.WebAPI;
 using PocketDDD.Server.WebAPI.Authentication;
 
 var corsPolicy = "corsPolicy";
@@ -28,6 +29,8 @@ builder.Services.AddDbContext<PocketDDDContext>(
     options => options.UseSqlServer("name=ConnectionStrings:PocketDDDContext")
 );
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<RegistrationService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FeedbackService>();
@@ -36,6 +39,8 @@ builder.Services.AddScoped<PrizeDrawService>();
 builder.Services.AddScoped<SpeakersService>();
 
 builder.Services.AddHttpClient<SessionizeService>();
+
+builder.Services.AddHostedService<UpdateFromSessionizeBackgroundService>();
 
 builder.Services.AddAuthentication()
     .AddScheme<UserIsRegisteredOptions, UserIsRegisteredAuthHandler>(UserIsRegisteredAuthHandler.SchemeName, null);

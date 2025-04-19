@@ -1,34 +1,46 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PocketDDD.Server.DB;
 using PocketDDD.Server.Model.DBModel;
 using PocketDDD.Server.Model.Sessionize;
-using System.Net.Http.Json;
+using Session = PocketDDD.Server.Model.DBModel.Session;
 
 namespace PocketDDD.Server.Services;
 
 public class SessionizeService
 {
-    private readonly HttpClient httpClient;
     private readonly PocketDDDContext dbContext;
+    private readonly HttpClient httpClient;
 
-    public SessionizeService(HttpClient httpClient, PocketDDDContext dbContext)
+    public SessionizeService(HttpClient httpClient, PocketDDDContext dbContext, ILogger<SessionizeService> logger)
     {
+        Logger = logger;
         this.httpClient = httpClient;
         this.dbContext = dbContext;
         httpClient.BaseAddress = new Uri("https://sessionize.com/api/v2/");
     }
 
+    private ILogger<SessionizeService> Logger { get; }
+
     public async Task UpdateFromSessionize()
     {
-        var dbEvent = await dbContext.EventDetail.SingleAsync(x => x.Id == 1);
+        Logger.LogInformation("Looking for event detail in database");
 
+        var dbEvent = await dbContext.EventDetail.OrderBy(x => x.Id).LastAsync();
         var sessionizeEventId = dbEvent.SessionizeId;
+
+        Logger.LogInformation("About to get data from Sessionize API");
+
         var sessionizeEvent = await httpClient.GetFromJsonAsync<SessionizeEvent>($"{sessionizeEventId}/view/All");
 
         if (sessionizeEvent is null)
             throw new ArgumentNullException(nameof(sessionizeEvent));
 
-        var dbTracks = await dbContext.Tracks.ToListAsync();
+        Logger.LogInformation("Information retrieved from Sessionize API");
+        Logger.LogInformation("Looking for changes to rooms");
+
+        var dbTracks = await dbContext.Tracks.Where(track => track.EventDetail.Id == dbEvent.Id).ToListAsync();
         foreach (var item in sessionizeEvent.rooms)
         {
             var dbTrack = dbTracks.SingleOrDefault(x => x.SessionizeId == item.id);
@@ -46,10 +58,21 @@ public class SessionizeService
             dbTrack.Name = $"Track {item.sort}";
         }
 
-        await dbContext.SaveChangesAsync();
+        if (dbContext.ChangeTracker.HasChanges())
+        {
+            dbEvent.Version++;
+            Logger.LogInformation("Updating db with changes to rooms");
+            await dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            Logger.LogInformation("No changes to rooms were detected");
+        }
 
+        Logger.LogInformation("Looking for changes to time slots and breaks");
 
-        var dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
+        var dbTimeSlots = await dbContext.TimeSlots.Where(timeSlot => timeSlot.EventDetail.Id == dbEvent.Id)
+            .ToListAsync();
         var sessionizeTimeSlots = sessionizeEvent.sessions
             .Select(x => (x.startsAt, x.endsAt, x.isServiceSession,
                 serviceSessionDetails: x.isServiceSession ? x.title : null))
@@ -65,17 +88,28 @@ public class SessionizeService
                 {
                     EventDetail = dbEvent,
                     From = item.startsAt,
-                    To = item.endsAt,
-                    Info = item.isServiceSession ? item.serviceSessionDetails : null
+                    To = item.endsAt
                 };
                 dbContext.TimeSlots.Add(dbTimeSlot);
             }
+
+            dbTimeSlot.Info = item.isServiceSession ? item.serviceSessionDetails : null;
         }
 
-        await dbContext.SaveChangesAsync();
+        if (dbContext.ChangeTracker.HasChanges())
+        {
+            dbEvent.Version++;
+            Logger.LogInformation("Updating db with changes to time slots and breaks");
+            await dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            Logger.LogInformation("No changes to time slots or breaks were detected");
+        }
 
+        Logger.LogInformation("Looking for changes to sessions");
 
-        var dbSessions = await dbContext.Sessions.ToListAsync();
+        var dbSessions = await dbContext.Sessions.Where(session => session.EventDetail.Id == dbEvent.Id).ToListAsync();
         var speakers = sessionizeEvent.speakers;
         dbTracks = await dbContext.Tracks.ToListAsync();
         dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
@@ -89,7 +123,7 @@ public class SessionizeService
             var dbSession = dbSessions.SingleOrDefault(x => x.SessionizeId == sessionizeId);
             if (dbSession == null)
             {
-                dbSession = new Model.DBModel.Session
+                dbSession = new Session
                 {
                     SessionizeId = sessionizeId,
                     EventDetail = dbEvent,
@@ -106,7 +140,16 @@ public class SessionizeService
             dbSession.TimeSlot = GetTimeSlot(dbTimeSlots, item.startsAt, item.endsAt);
         }
 
-        await dbContext.SaveChangesAsync();
+        if (dbContext.ChangeTracker.HasChanges())
+        {
+            dbEvent.Version++;
+            Logger.LogInformation("Updating db with changes to sessions");
+            await dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            Logger.LogInformation("No changes to sessions were detected");
+        }
     }
 
     private string GetSpeakers(List<Speaker> speakers, List<string> speakerIds)

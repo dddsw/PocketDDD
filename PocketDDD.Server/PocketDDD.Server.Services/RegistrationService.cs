@@ -1,30 +1,20 @@
-﻿using PocketDDD.Server.DB;
+﻿using System.Security.Cryptography;
+using PocketDDD.Server.DB;
 using PocketDDD.Server.Model.DBModel;
-using PocketDDD.Server.Model.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using PocketDDD.Shared.API.RequestDTOs;
 using PocketDDD.Shared.API.ResponseDTOs;
 
 namespace PocketDDD.Server.Services;
-public class RegistrationService
+
+public class RegistrationService(PocketDDDContext dbContext, EventDataService eventDataService)
 {
-    private readonly PocketDDDContext dbContext;
-
-    public RegistrationService(PocketDDDContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-
     public async Task<LoginResultDTO> Register(RegisterDTO dto)
     {
+        var currentEventDetailId = await eventDataService.FetchCurrentEventDetailId();
+
         var user = new User
         {
-            EventDetailId = 1,
+            EventDetailId = currentEventDetailId,
             Name = dto.Name,
             Token = GenerateBearerToken(),
             EventScore = 1
