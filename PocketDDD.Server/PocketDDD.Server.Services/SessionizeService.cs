@@ -27,7 +27,7 @@ public class SessionizeService
     {
         Logger.LogInformation("Looking for event detail in database");
 
-        var dbEvent = await dbContext.EventDetail.SingleAsync(x => x.Id == 1);
+        var dbEvent = await dbContext.EventDetail.OrderBy(x => x.Id).LastAsync();
         var sessionizeEventId = dbEvent.SessionizeId;
 
         Logger.LogInformation("About to get data from Sessionize API");
@@ -40,7 +40,7 @@ public class SessionizeService
         Logger.LogInformation("Information retrieved from Sessionize API");
         Logger.LogInformation("Looking for changes to rooms");
 
-        var dbTracks = await dbContext.Tracks.ToListAsync();
+        var dbTracks = await dbContext.Tracks.Where(track => track.EventDetail.Id == dbEvent.Id).ToListAsync();
         foreach (var item in sessionizeEvent.rooms)
         {
             var dbTrack = dbTracks.SingleOrDefault(x => x.SessionizeId == item.id);
@@ -71,7 +71,8 @@ public class SessionizeService
 
         Logger.LogInformation("Looking for changes to time slots and breaks");
 
-        var dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
+        var dbTimeSlots = await dbContext.TimeSlots.Where(timeSlot => timeSlot.EventDetail.Id == dbEvent.Id)
+            .ToListAsync();
         var sessionizeTimeSlots = sessionizeEvent.sessions
             .Select(x => (x.startsAt, x.endsAt, x.isServiceSession,
                 serviceSessionDetails: x.isServiceSession ? x.title : null))
@@ -107,8 +108,8 @@ public class SessionizeService
         }
 
         Logger.LogInformation("Looking for changes to sessions");
-        
-        var dbSessions = await dbContext.Sessions.ToListAsync();
+
+        var dbSessions = await dbContext.Sessions.Where(session => session.EventDetail.Id == dbEvent.Id).ToListAsync();
         var speakers = sessionizeEvent.speakers;
         dbTracks = await dbContext.Tracks.ToListAsync();
         dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
