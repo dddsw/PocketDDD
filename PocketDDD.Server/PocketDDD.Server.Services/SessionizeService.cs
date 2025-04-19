@@ -86,11 +86,12 @@ public class SessionizeService
                 {
                     EventDetail = dbEvent,
                     From = item.startsAt,
-                    To = item.endsAt,
-                    Info = item.isServiceSession ? item.serviceSessionDetails : null
+                    To = item.endsAt
                 };
                 dbContext.TimeSlots.Add(dbTimeSlot);
             }
+
+            dbTimeSlot.Info = item.isServiceSession ? item.serviceSessionDetails : null;
         }
         if (dbContext.ChangeTracker.HasChanges())
         {
