@@ -1,5 +1,6 @@
 ﻿using PocketDDD.Shared.API.ResponseDTOs;
 using System.Collections.Immutable;
+using System.Globalization;
 
 namespace PocketDDD.BlazorClient.Features.Home.Store;
 
@@ -21,7 +22,8 @@ public static class EventDataMapper
                                     Title = s.Title,
                                     TrackName = eventData.Tracks.Single(tr => tr.Id == s.TrackId).Name,
                                     RoomName = eventData.Tracks.Single(tr => tr.Id == s.TrackId).RoomName,
-                                    IsBookmarked = sessionBookmarks.Contains(s.Id)
+                                    IsBookmarked = sessionBookmarks.Contains(s.Id),
+                                    Length = ts.To.Subtract(ts.From)
                                 })
                                 .OrderBy(s => s.TrackName)
                                 .ToImmutableList()
