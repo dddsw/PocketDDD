@@ -60,6 +60,7 @@ public class SessionizeService
 
         if (dbContext.ChangeTracker.HasChanges())
         {
+            dbEvent.Version++;
             Logger.LogInformation("Updating db with changes to rooms");
             await dbContext.SaveChangesAsync();
         }
@@ -67,7 +68,7 @@ public class SessionizeService
         {
             Logger.LogInformation("No changes to rooms were detected");
         }
-        
+
         Logger.LogInformation("Looking for changes to time slots and breaks");
 
         var dbTimeSlots = await dbContext.TimeSlots.ToListAsync();
@@ -93,8 +94,10 @@ public class SessionizeService
 
             dbTimeSlot.Info = item.isServiceSession ? item.serviceSessionDetails : null;
         }
+
         if (dbContext.ChangeTracker.HasChanges())
         {
+            dbEvent.Version++;
             Logger.LogInformation("Updating db with changes to time slots and breaks");
             await dbContext.SaveChangesAsync();
         }
@@ -135,8 +138,10 @@ public class SessionizeService
             dbSession.Track = dbTracks.Single(x => x.SessionizeId == item.roomId);
             dbSession.TimeSlot = GetTimeSlot(dbTimeSlots, item.startsAt, item.endsAt);
         }
+
         if (dbContext.ChangeTracker.HasChanges())
         {
+            dbEvent.Version++;
             Logger.LogInformation("Updating db with changes to sessions");
             await dbContext.SaveChangesAsync();
         }

@@ -26,7 +26,7 @@ public class FakePocketDDDApiService : IPocketDDDApiService
             new EventDataResponseDTO
             {
                 Id = 1,
-                Version = 1,
+                Version = 0, //Set to 0 so if we ever connect this to a real API then it will update!
                 TimeSlots = new[]
                 {
                     new TimeSlotDTO
