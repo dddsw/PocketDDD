@@ -16,7 +16,7 @@ public static class HomeReducer
         { 
             Loading = false, 
             FailedToLoad = false, 
-            EventMetaData = action.EventData.ToHomeStateModel(action.SessionBookmarks)
+            Timeslots = action.EventData.ToHomeStateModel(action.SessionBookmarks)
         };
 
     //[ReducerMethod]

@@ -1,22 +1,18 @@
 ﻿using Fluxor;
 using MudBlazor;
-using PocketDDD.BlazorClient.Features.Session.Store;
-using PocketDDD.BlazorClient.Features.Sync.Store;
 using PocketDDD.BlazorClient.Services;
-using PocketDDD.Shared.API.RequestDTOs;
-using System.Collections.ObjectModel;
 
 namespace PocketDDD.BlazorClient.Features.Home.Store;
 
 public class HomeEffects
 {
-    private readonly IState<HomeState> _state;
+    private readonly IDialogService _dialog;
     private readonly LocalStorageContext _localStorage;
     private readonly IPocketDDDApiService _pocketDDDAPI;
-    private readonly IDialogService _dialog;
+    private readonly IState<HomeState> _state;
 
-    public HomeEffects(IState<HomeState> state, IDispatcher dispatcher, LocalStorageContext localStorage, 
-                        IPocketDDDApiService pocketDDDAPI, IDialogService dialog)
+    public HomeEffects(IState<HomeState> state, IDispatcher dispatcher, LocalStorageContext localStorage,
+        IPocketDDDApiService pocketDDDAPI, IDialogService dialog)
     {
         _state = state;
         _localStorage = localStorage;
@@ -37,5 +33,18 @@ public class HomeEffects
 
         if (eventData is not null)
             dispatcher.Dispatch(new SetEventMetaDataAction(eventData, sessionBookmarks));
+    }
+
+    [EffectMethod]
+    public async Task OnToggleSessionBookmarked(ToggleBookmarkedAction action, IDispatcher dispatcher)
+    {
+        var bookmarks = await _localStorage.SessionBookmarks.GetOrDefaultAsync();
+
+        if (action.Bookmarked && !bookmarks.Contains(action.SessionId))
+            bookmarks.Add(action.SessionId);
+        else if (!action.Bookmarked && bookmarks.Contains(action.SessionId))
+            bookmarks.Remove(action.SessionId);
+
+        await _localStorage.SessionBookmarks.SetAsync(bookmarks);
     }
 }
