@@ -5,23 +5,29 @@
 @inject IDispatcher Dispatcher
 @inject IState<HeaderBarState> State
 
-<MudAppBar Dense="true" DisableGutters="true" Class="pl-1">
+<MudAppBar Color="Color.Primary">
     @if (State.Value.ShowBackButton)
     {
         <MudIconButton 
             Icon="@Icons.Material.Filled.ArrowBack"
-            OnClick="HandleNavigateBack"
-            Class="pl-0"/>
+            Edge="Edge.Start"
+            Color="Color.Inherit"
+            OnClick="HandleNavigateBack"/>
     }
 
-    <MudText Typo="Typo.h6" Class="pl-0">@State.Value.Title</MudText>
+    <MudText Typo="Typo.h5">@State.Value.Title</MudText>
     <MudSpacer />
     
     @if (State.Value.ShowFeedbackButton)
     {
-        <MudIconButton
-            Icon="@Icons.Material.Filled.TagFaces"
-            OnClick="HandleShowEventFeedback" />
+        <MudButton
+            EndIcon="@Icons.Material.Filled.TagFaces"
+            Size="Size.Small"
+            OnClick="HandleShowEventFeedback"
+            Color="Color.Inherit"
+            Variant="Variant.Outlined">
+            Feedback
+        </MudButton>
     }
 
 </MudAppBar>

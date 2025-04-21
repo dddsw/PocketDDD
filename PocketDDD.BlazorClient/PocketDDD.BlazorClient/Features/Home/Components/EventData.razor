@@ -1,56 +1,144 @@
-﻿@using PocketDDD.BlazorClient.Features.Home.Store;
-@using System.Text.Json;
-@using PocketDDD.BlazorClient.Features.Session.Store;
+﻿@using PocketDDD.BlazorClient.Features.Home.Store
 @inherits FluxorComponent
 
 @inject NavigationManager NavigationManager
 @inject IState<HomeState> State
 @inject IDispatcher Dispatcher
 
-<MudList Clickable="true">
-    @foreach(var timeSlot in State.Value.EventMetaData)
+<MudList Class="pt-0 mud-background-gray" Dense="true">
+    @foreach (var timeSlot in State.Value.Timeslots)
     {
-        <MudListSubheader Class="pb-0 pl-1 border-b border-solid mud-border-primary">
-            <MudText Typo="Typo.h6">
-                @timeSlot.From.ToString("h:mm")
-                @timeSlot.From.ToString("tt").ToLowerInvariant()
-            </MudText>
+        <MudListSubheader Class="pt-2 pb-1">
+            <MudPaper Width="fit-content" Class="mud-theme-primary border-solid py-2 px-6 my-0">
+                <MudText Typo="Typo.h6" Align="Align.Center">
+                    @timeSlot.From.LocalDateTime.ToString("h:mm")
+                    @timeSlot.From.LocalDateTime.ToString("tt").ToLowerInvariant()
+                </MudText>
+            </MudPaper>
         </MudListSubheader>
-        @if(timeSlot.Info is not null)
+
+        if (timeSlot.Info is not null)
         {
-            <MudListItem Class="ml-6">
-                <MudText Typo="Typo.h5">@timeSlot.Info</MudText>
-            </MudListItem>
-        }
-        @foreach(var sessionItem in timeSlot.Sessions.Select((session, index) => (session, index)))
-        {
-            <MudListItem OnClick="() => HandleViewSession(sessionItem.session.Id)">
-                <MudPaper Class="pa-4">
-                    <MudText Typo="Typo.subtitle1">
-                        @WhenBookmarkedShowIcon(sessionItem.session) 
-                        @sessionItem.session.Title
-                    </MudText>
-                    <MudText Typo="Typo.subtitle2">@sessionItem.session.SpeakerName</MudText>
-                    <MudText Typo="Typo.subtitle2">@sessionItem.session.RoomName</MudText>
+            <MudListItem>
+                <MudPaper Outlined="true" Class="px-4 py-2">
+                    <MudText Typo="Typo.h6">@timeSlot.Info</MudText>
                 </MudPaper>
             </MudListItem>
+        }
 
-            @if (sessionItem.index != timeSlot.Sessions.Count -1)
-            {
-                <MudDivider />
-            }
+        foreach (var room in timeSlot.Rooms)
+        {
+            <MudListItem>
+                <MudCard Outlined="true">
+                    <MudCardHeader Class="pb-0">
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1">
+                                @room.RoomName
+                            </MudText>
+                            <MudDivider Class="@GetTrackDividerStylesForRoom(room)"
+                                        DividerType="DividerType.FullWidth"/>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent Class="py-2">
+                        @for (var i = 0; i < room.Sessions.Count; i++)
+                        {
+                            var session = room.Sessions[i];
+                            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Stretch">
+                                <MudStack>
+                                    <MudText Typo="Typo.h6">@session.Title</MudText>
+                                    <MudText Typo="Typo.subtitle1">@session.SpeakerName</MudText>
+                                </MudStack>
+                                <MudStack Justify="Justify.SpaceBetween" AlignItems="AlignItems.End" Spacing="0">
+                                    <MudToggleIconButton
+                                        ToggledChanged="@(_ => HandleToggleSessionBookmarked(session))"
+                                        Toggled="@session.IsBookmarked"
+                                        Color="@Color.Default"
+                                        Icon="@Icons.Material.Filled.BookmarkBorder"
+                                        ToggledIcon="@Icons.Material.Filled.Bookmark"
+                                        ToggledColor="@Color.Primary"
+                                        title="@(session.IsBookmarked ? "Unbookmark session" : "Bookmark session")"/>
+                                    @ShowSessionLength(session)
+                                </MudStack>
+                            </MudStack>
+                            <MudButton OnClick="() => HandleViewSession(session.Id)" FullWidth="true"
+                                       Variant="Variant.Outlined" Class="my-2">
+                                More details
+                            </MudButton>
+                            @if (i < room.Sessions.Count - 1)
+                            {
+                                <MudDivider Class="@GetMultiTalkDividerStylesForRoom(room)"
+                                            DividerType="DividerType.Middle"/>
+                            }
+                        }
+                    </MudCardContent>
+                </MudCard>
+            </MudListItem>
         }
     }
-
 </MudList>
 
 @code{
-    RenderFragment? WhenBookmarkedShowIcon(Features.Home.Store.Session session) =>
-        session.IsBookmarked
-            ? @<MudIcon Icon="@Icons.Material.Filled.Bookmark" Title="Bookmarked" />
-            : null;
+
+    RenderFragment ShowSessionLength(Session session)
+    {
+        var colour = Color.Info;
+
+        if (session.Length == TimeSpan.FromMinutes(30))
+            colour = Color.Secondary;
+        else if (session.Length == TimeSpan.FromMinutes(15))
+            colour = Color.Tertiary;
+
+        return @<MudChip Color="@colour" Variant="Variant.Outlined">@GetTimeSpanDisplayText(session.Length)</MudChip>;
+    }
+
+    private string GetBorderColourForRoom(Room room)
+    {
+        string colour;
+
+        if (room.RoomName.Contains('1'))
+            colour = "mud-border-tertiary";
+        else if (room.RoomName.Contains('2'))
+            colour = "mud-border-primary";
+        else if (room.RoomName.Contains('3'))
+            colour = "mud-border-secondary";
+        else
+            colour = "mud-border-info";
+
+        return colour;
+    }
+
+    private string GetTrackDividerStylesForRoom(Room room)
+    {
+        return $"{GetBorderColourForRoom(room)}";
+    }
+
+    private string GetMultiTalkDividerStylesForRoom(Room room)
+    {
+        return $"{GetBorderColourForRoom(room)} ma-4";
+    }
+
+    private static string GetTimeSpanDisplayText(TimeSpan timeSpan)
+    {
+        if (timeSpan < TimeSpan.FromHours(1))
+        {
+            return $"{timeSpan.Minutes} minutes";
+        }
+
+        return timeSpan == TimeSpan.FromHours(1) ? "1 hour" : $"{timeSpan.TotalHours:F1} hours";
+    }
+
 }
 
 @code {
-    void HandleViewSession(int sessionId) => NavigationManager.NavigateTo($"session/{sessionId}");
+
+    void HandleViewSession(int sessionId)
+    {
+        NavigationManager.NavigateTo($"session/{sessionId}");
+    }
+
+    void HandleToggleSessionBookmarked(Session session)
+    {
+        Dispatcher.Dispatch(new ToggleBookmarkedAction(session.Id, !session.IsBookmarked));
+    }
+
 }
