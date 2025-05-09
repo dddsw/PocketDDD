@@ -1,0 +1,28 @@
+name: Destroy non-production environments
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  destroy_environments:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ['test2']
+        # env: ['dev', 'test', 'test2']
+    environment: ${{ matrix.env }}
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - run: terraform init -backend-config="key=${{ matrix.env }}.terraform.tfstate"
+      - run: terraform apply -auto-approve -var-file ../tfvars/${{ matrix.env }}.tfvars -var 'cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        env:
+          ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
