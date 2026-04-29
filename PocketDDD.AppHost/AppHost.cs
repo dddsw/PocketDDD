@@ -1,6 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var db = builder.AddSqlServer("sql")
+    .WithDbGate(r => r.WithExplicitStart())
     .WithLifetime(ContainerLifetime.Persistent)
     .AddDatabase("PocketDDDContext");
 
