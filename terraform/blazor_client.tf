@@ -24,16 +24,16 @@ data "cloudflare_zone" "dns_zone" {
   zone_id = "4c52c7e174b32da4b4786d3dba3d955f"
 }
 
-resource "cloudflare_dns_record" "cname_record" {
-  zone_id = data.cloudflare_zone.dns_zone.id
-  name    = local.subdomain
-  content = azurerm_static_web_app.blazor-client.default_host_name
-  type    = "CNAME"
-  ttl     = 3600
-}
+# resource "cloudflare_dns_record" "cname_record" {
+#   zone_id = data.cloudflare_zone.dns_zone.id
+#   name    = local.subdomain
+#   content = azurerm_static_web_app.blazor-client.default_host_name
+#   type    = "CNAME"
+#   ttl     = 3600
+# }
 
-resource "azurerm_static_web_app_custom_domain" "custom_domain" {
-  static_web_app_id = azurerm_static_web_app.blazor-client.id
-  domain_name       = cloudflare_dns_record.cname_record.name
-  validation_type   = "cname-delegation"
-}
+# resource "azurerm_static_web_app_custom_domain" "custom_domain" {
+#   static_web_app_id = azurerm_static_web_app.blazor-client.id
+#   domain_name       = cloudflare_dns_record.cname_record.name
+#   validation_type   = "cname-delegation"
+# }
