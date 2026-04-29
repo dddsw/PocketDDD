@@ -21,10 +21,13 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
 }
 
 data "cloudflare_zone" "dns_zone" {
-  name = "dddsouthwest.com"
+  zone_id = "4c52c7e174b32da4b4786d3dba3d955f"
+  filter = {
+    name = "dddsouthwest.com"
+  }
 }
 
-resource "cloudflare_record" "cname_record" {
+resource "cloudflare_dns_record" "cname_record" {
   zone_id = data.cloudflare_zone.dns_zone.id
   name    = local.subdomain
   content = azurerm_static_web_app.blazor-client.default_host_name
