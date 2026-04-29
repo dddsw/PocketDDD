@@ -7,6 +7,8 @@ on:
         default: "Test"
         type: string
     secrets:
+      AZURE_SUBSCRIPTION_ID:
+        required: true
       AZURE_CREDENTIALS:
         required: true
       AZURE_STATIC_WEB_APPS_API_TOKEN:
@@ -50,6 +52,7 @@ jobs:
 
         terraform apply -auto-approve -var-file ../tfvars/${{ inputs.env }}.tfvars -var 'cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
       env:
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
 
