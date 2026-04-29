@@ -15,7 +15,7 @@ resource "azurerm_linux_web_app" "api_server_web_app" {
 
   site_config {
     application_stack {
-      dotnet_version = "8.0"
+      dotnet_version = "10.0"
     }
     always_on = var.api_always_on
   }

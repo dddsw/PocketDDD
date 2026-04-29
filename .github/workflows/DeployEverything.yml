@@ -7,6 +7,8 @@ on:
         default: "Test"
         type: string
     secrets:
+      AZURE_SUBSCRIPTION_ID:
+        required: true
       AZURE_CREDENTIALS:
         required: true
       AZURE_STATIC_WEB_APPS_API_TOKEN:
@@ -21,8 +23,12 @@ on:
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
+  DOTNET_CORE_VERSION: 10.0.x
   WORKING_DIRECTORY: PocketDDD.Server/PocketDDD.Server.WebAPI
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   deploy_terraform:
@@ -36,16 +42,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Log in with Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - name: Setup terraform
-      uses: hashicorp/setup-terraform@v3
+      uses: hashicorp/setup-terraform@v4
     - run: |
         terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
 
         terraform apply -auto-approve -var-file ../tfvars/${{ inputs.env }}.tfvars -var 'cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
       env:
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
 
@@ -79,7 +86,7 @@ jobs:
     needs: [deploy_terraform, build_api_server]
     steps:
     - name: Log in with Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - name: Download artifact from build job
@@ -88,7 +95,7 @@ jobs:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: pocketddd-${{ inputs.env }}-api-server-web-app
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
@@ -99,11 +106,11 @@ jobs:
     name: Build and Deploy Blazor Client
     needs: deploy_terraform
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Log in with Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
