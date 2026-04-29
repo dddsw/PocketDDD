@@ -22,9 +22,6 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
 
 data "cloudflare_zone" "dns_zone" {
   zone_id = "4c52c7e174b32da4b4786d3dba3d955f"
-  filter = {
-    name = "dddsouthwest.com"
-  }
 }
 
 resource "cloudflare_dns_record" "cname_record" {
@@ -37,6 +34,6 @@ resource "cloudflare_dns_record" "cname_record" {
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
   static_web_app_id = azurerm_static_web_app.blazor-client.id
-  domain_name       = cloudflare_record.cname_record.hostname
+  domain_name       = cloudflare_dns_record.cname_record.hostname
   validation_type   = "cname-delegation"
 }
