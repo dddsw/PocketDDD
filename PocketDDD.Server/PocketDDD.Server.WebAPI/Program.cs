@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using PocketDDD.Server.DB;
+using PocketDDD.Server.Model.DBModel;
 using PocketDDD.Server.Services;
 using PocketDDD.Server.WebAPI;
 using PocketDDD.Server.WebAPI.Authentication;
@@ -7,6 +11,23 @@ using PocketDDD.Server.WebAPI.Authentication;
 var corsPolicy = "corsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation())
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddSqlClientInstrumentation())
+    .UseOtlpExporter();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -49,6 +70,19 @@ builder.Services.AddHealthChecks()
     .AddDbContextCheck<PocketDDDContext>();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<PocketDDDContext>();
+    await db.Database.MigrateAsync();
+
+    if (!await db.EventDetail.AnyAsync())
+    {
+        db.EventDetail.Add(new EventDetail { SessionizeId = "dev-event", Version = 0 });
+        await db.SaveChangesAsync();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

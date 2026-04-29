@@ -48,7 +48,7 @@
     protected override void OnInitialized()
     {
         SubscribeToAction<NavigateBackAction>(_ => HandleNavigateHome());
-        SubscribeToAction<ViewFeedbackAction>(_ => HandleShowSessionFeedback());
+        SubscribeToAction<ViewFeedbackAction>(action => { _ = HandleShowSessionFeedback(); });
 
         base.OnInitialized();
     }
@@ -71,10 +71,10 @@
         Dispatcher.Dispatch(new ToggleBookmarkedAction(session.Id, !session.IsBookmarked));
     }
 
-    void HandleShowSessionFeedback()
+    async Task HandleShowSessionFeedback()
     {
-        Dialog.Show<Features.SessionFeedback.Components.SessionFeedback>(
-            "", 
+        await Dialog.ShowAsync<Features.SessionFeedback.Components.SessionFeedback>(
+            "",
             new DialogParameters { ["Id"] = Id },
             new DialogOptions { FullScreen = true });
     }
