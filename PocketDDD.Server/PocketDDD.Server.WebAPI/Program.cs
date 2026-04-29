@@ -3,7 +3,6 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using PocketDDD.Server.DB;
-using PocketDDD.Server.Model.DBModel;
 using PocketDDD.Server.Services;
 using PocketDDD.Server.WebAPI;
 using PocketDDD.Server.WebAPI.Authentication;
@@ -70,19 +69,6 @@ builder.Services.AddHealthChecks()
     .AddDbContextCheck<PocketDDDContext>();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<PocketDDDContext>();
-    await db.Database.MigrateAsync();
-
-    if (!await db.EventDetail.AnyAsync())
-    {
-        db.EventDetail.Add(new EventDetail { SessionizeId = "dev-event", Version = 0 });
-        await db.SaveChangesAsync();
-    }
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

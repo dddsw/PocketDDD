@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/PocketDDD.Server/">
     <Project Path="PocketDDD.Server/PocketDDD.Server.DB/PocketDDD.Server.DB.csproj" />
+    <Project Path="PocketDDD.Server/PocketDDD.Server.MigrationService/PocketDDD.Server.MigrationService.csproj" />
     <Project Path="PocketDDD.Server/PocketDDD.Server.Model/PocketDDD.Server.Model.csproj" />
     <Project Path="PocketDDD.Server/PocketDDD.Server.Services/PocketDDD.Server.Services.csproj" />
     <Project Path="PocketDDD.Server/PocketDDD.Server.WebAPI/PocketDDD.Server.WebAPI.csproj" />

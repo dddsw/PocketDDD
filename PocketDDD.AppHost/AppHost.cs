@@ -9,10 +9,14 @@ var sessionize = builder.AddWireMock("sessionize")
     .WithReadStaticMappings()
     .WithWatchStaticMappings();
 
+var migrations = builder.AddProject<Projects.PocketDDD_Server_MigrationService>("migrations")
+    .WithReference(db)
+    .WaitFor(db);
+
 var api = builder.AddProject<Projects.PocketDDD_Server_WebAPI>("webapi")
     .WithEndpoint("https", e => { e.Port = 7081; e.IsProxied = false; })
     .WithReference(db)
-    .WaitFor(db)
+    .WaitForCompletion(migrations)
     .WithReference(sessionize)
     .WaitFor(sessionize)
     .WithEnvironment("Sessionize__BaseAddress", sessionize.GetEndpoint("http"));

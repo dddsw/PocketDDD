@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PocketDDD.BlazorClient\PocketDDD.BlazorClient\PocketDDD.BlazorClient.csproj" />
     <ProjectReference Include="..\PocketDDD.Server\PocketDDD.Server.WebAPI\PocketDDD.Server.WebAPI.csproj" />
+    <ProjectReference Include="..\PocketDDD.Server\PocketDDD.Server.MigrationService\PocketDDD.Server.MigrationService.csproj" />
   </ItemGroup>
 
 </Project>
