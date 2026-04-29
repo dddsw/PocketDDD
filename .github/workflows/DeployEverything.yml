@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Log in with Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - name: Setup terraform
@@ -79,7 +79,7 @@ jobs:
     needs: [deploy_terraform, build_api_server]
     steps:
     - name: Log in with Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
     - name: Download artifact from build job
@@ -88,7 +88,7 @@ jobs:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: pocketddd-${{ inputs.env }}-api-server-web-app
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
@@ -99,11 +99,11 @@ jobs:
     name: Build and Deploy Blazor Client
     needs: deploy_terraform
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Log in with Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
