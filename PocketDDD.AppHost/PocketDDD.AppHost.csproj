@@ -1,0 +1,29 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.2.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>40972512-f179-4cdd-9af8-da0ed1ac8f36</UserSecretsId>
+    <IsAspireHost>true</IsAspireHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.2.4" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.2.4" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" Version="13.2.1-beta.532" />
+    <PackageReference Include="WireMock.Net.Aspire" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Mocks\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PocketDDD.BlazorClient\PocketDDD.BlazorClient\PocketDDD.BlazorClient.csproj" />
+    <ProjectReference Include="..\PocketDDD.Server\PocketDDD.Server.WebAPI\PocketDDD.Server.WebAPI.csproj" />
+    <ProjectReference Include="..\PocketDDD.Server\PocketDDD.Server.MigrationService\PocketDDD.Server.MigrationService.csproj" />
+  </ItemGroup>
+
+</Project>

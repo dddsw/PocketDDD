@@ -1,0 +1,128 @@
+{
+  "Guid": "8d7d3f3c-3c0e-4a4f-8c2a-1f0a5e0b9b00",
+  "Priority": 0,
+  "Request": {
+    "Methods": ["GET"],
+    "Path": {
+      "Matchers": [
+        { "Name": "RegexMatcher", "Pattern": "^/[^/]+/view/All/?$" }
+      ]
+    }
+  },
+  "Response": {
+    "StatusCode": 200,
+    "Headers": { "Content-Type": "application/json" },
+    "BodyAsJson": {
+      "sessions": [
+        {
+          "id": "1001",
+          "title": "Welcome",
+          "description": "Kick-off and housekeeping.",
+          "startsAt": "2026-05-09T09:00:00",
+          "endsAt": "2026-05-09T09:15:00",
+          "isServiceSession": true,
+          "isPlenumSession": false,
+          "speakers": [],
+          "categoryItems": [],
+          "questionAnswers": [],
+          "roomId": 1,
+          "liveUrl": null,
+          "recordingUrl": null,
+          "status": "Accepted",
+          "isInformed": true,
+          "isConfirmed": true
+        },
+        {
+          "id": "1002",
+          "title": "Building distributed apps with .NET Aspire",
+          "description": "An introduction to .NET Aspire and how it streamlines building observable distributed applications.",
+          "startsAt": "2026-05-09T09:30:00",
+          "endsAt": "2026-05-09T10:30:00",
+          "isServiceSession": false,
+          "isPlenumSession": false,
+          "speakers": ["s-1"],
+          "categoryItems": [],
+          "questionAnswers": [],
+          "roomId": 1,
+          "liveUrl": null,
+          "recordingUrl": null,
+          "status": "Accepted",
+          "isInformed": true,
+          "isConfirmed": true
+        },
+        {
+          "id": "1003",
+          "title": "Lunch",
+          "description": "",
+          "startsAt": "2026-05-09T12:30:00",
+          "endsAt": "2026-05-09T13:30:00",
+          "isServiceSession": true,
+          "isPlenumSession": false,
+          "speakers": [],
+          "categoryItems": [],
+          "questionAnswers": [],
+          "roomId": 1,
+          "liveUrl": null,
+          "recordingUrl": null,
+          "status": "Accepted",
+          "isInformed": true,
+          "isConfirmed": true
+        },
+        {
+          "id": "1004",
+          "title": "EF Core deep dive",
+          "description": "Tips and tricks for getting the most out of Entity Framework Core 10.",
+          "startsAt": "2026-05-09T14:00:00",
+          "endsAt": "2026-05-09T15:00:00",
+          "isServiceSession": false,
+          "isPlenumSession": false,
+          "speakers": ["s-2"],
+          "categoryItems": [],
+          "questionAnswers": [],
+          "roomId": 2,
+          "liveUrl": null,
+          "recordingUrl": null,
+          "status": "Accepted",
+          "isInformed": true,
+          "isConfirmed": true
+        }
+      ],
+      "speakers": [
+        {
+          "id": "s-1",
+          "firstName": "Ada",
+          "lastName": "Lovelace",
+          "bio": "Pioneer.",
+          "tagLine": "Software craftswoman",
+          "profilePicture": "",
+          "isTopSpeaker": false,
+          "links": [],
+          "sessions": [1002],
+          "fullName": "Ada Lovelace",
+          "categoryItems": [],
+          "questionAnswers": []
+        },
+        {
+          "id": "s-2",
+          "firstName": "Grace",
+          "lastName": "Hopper",
+          "bio": "Inventor of the compiler.",
+          "tagLine": "Rear Admiral",
+          "profilePicture": "",
+          "isTopSpeaker": true,
+          "links": [],
+          "sessions": [1004],
+          "fullName": "Grace Hopper",
+          "categoryItems": [],
+          "questionAnswers": []
+        }
+      ],
+      "questions": [],
+      "categories": [],
+      "rooms": [
+        { "id": 1, "name": "Main hall", "sort": 1 },
+        { "id": 2, "name": "Workshop room", "sort": 2 }
+      ]
+    }
+  }
+}

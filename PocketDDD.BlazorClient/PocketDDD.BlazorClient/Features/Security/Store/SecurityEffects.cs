@@ -41,7 +41,7 @@ public class SecurityEffects
         }
 
         if (currentDialogReference is null)
-            currentDialogReference = _dialog.Show<Features.Security.Components.Login>("", new DialogOptions { FullScreen = true });
+            currentDialogReference = await _dialog.ShowAsync<Features.Security.Components.Login>("", new DialogOptions { FullScreen = true });
     }
 
     [EffectMethod]

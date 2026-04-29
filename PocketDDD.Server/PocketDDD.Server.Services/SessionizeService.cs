@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PocketDDD.Server.DB;
 using PocketDDD.Server.Model.DBModel;
@@ -10,15 +11,19 @@ namespace PocketDDD.Server.Services;
 
 public class SessionizeService
 {
+    private const string DefaultBaseAddress = "https://sessionize.com/api/v2/";
+
     private readonly PocketDDDContext dbContext;
     private readonly HttpClient httpClient;
 
-    public SessionizeService(HttpClient httpClient, PocketDDDContext dbContext, ILogger<SessionizeService> logger)
+    public SessionizeService(HttpClient httpClient, PocketDDDContext dbContext, IConfiguration configuration, ILogger<SessionizeService> logger)
     {
         Logger = logger;
         this.httpClient = httpClient;
         this.dbContext = dbContext;
-        httpClient.BaseAddress = new Uri("https://sessionize.com/api/v2/");
+        var baseAddress = configuration["Sessionize:BaseAddress"] ?? DefaultBaseAddress;
+        if (!baseAddress.EndsWith('/')) baseAddress += "/";
+        httpClient.BaseAddress = new Uri(baseAddress);
     }
 
     private ILogger<SessionizeService> Logger { get; }

@@ -47,13 +47,13 @@
 
         Dispatcher.Dispatch(new SyncAction());
 
-        SubscribeToAction<ViewFeedbackAction>(_ => HandleShowEventFeedback());
+        SubscribeToAction<ViewFeedbackAction>(action => { _ = HandleShowEventFeedback(); });
 
         base.OnInitialized();
     }
 
-    void HandleShowEventFeedback()
+    async Task HandleShowEventFeedback()
     {
-        Dialog.Show<EventFeedback>("", new DialogOptions { FullScreen = true });
+        await Dialog.ShowAsync<EventFeedback>("", new DialogOptions { FullScreen = true });
     }
 }
