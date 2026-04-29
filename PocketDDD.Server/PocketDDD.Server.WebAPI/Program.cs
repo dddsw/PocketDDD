@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using PocketDDD.Server.DB;
 using PocketDDD.Server.Services;
 using PocketDDD.Server.WebAPI;
@@ -7,6 +10,23 @@ using PocketDDD.Server.WebAPI.Authentication;
 var corsPolicy = "corsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.IncludeFormattedMessage = true;
+    logging.IncludeScopes = true;
+});
+
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation())
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddSqlClientInstrumentation())
+    .UseOtlpExporter();
 
 // Add services to the container.
 builder.Services.AddControllers();

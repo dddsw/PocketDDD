@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/PocketDDD.BlazorClient/">
+    <Project Path="PocketDDD.BlazorClient/PocketDDD.BlazorClient.LocalStorage/PocketDDD.BlazorClient.LocalStorage.csproj" />
+    <Project Path="PocketDDD.BlazorClient/PocketDDD.BlazorClient/PocketDDD.BlazorClient.csproj" />
+  </Folder>
+  <Folder Name="/PocketDDD.Server/">
+    <Project Path="PocketDDD.Server/PocketDDD.Server.DB/PocketDDD.Server.DB.csproj" />
+    <Project Path="PocketDDD.Server/PocketDDD.Server.MigrationService/PocketDDD.Server.MigrationService.csproj" />
+    <Project Path="PocketDDD.Server/PocketDDD.Server.Model/PocketDDD.Server.Model.csproj" />
+    <Project Path="PocketDDD.Server/PocketDDD.Server.Services/PocketDDD.Server.Services.csproj" />
+    <Project Path="PocketDDD.Server/PocketDDD.Server.WebAPI/PocketDDD.Server.WebAPI.csproj" />
+  </Folder>
+  <Project Path="PocketDDD.AppHost/PocketDDD.AppHost.csproj" />
+  <Project Path="PocketDDD.Shared/PocketDDD.Shared.csproj" />
+</Solution>

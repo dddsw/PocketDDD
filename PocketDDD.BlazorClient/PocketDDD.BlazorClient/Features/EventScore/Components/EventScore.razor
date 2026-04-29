@@ -20,8 +20,8 @@
         base.OnInitialized();
     }
 
-    void HandleViewSyncStatus()
+    async Task HandleViewSyncStatus()
     {
-        Dialog.Show<SyncStatus>("", new DialogOptions { FullScreen = true });
+        await Dialog.ShowAsync<SyncStatus>("", new DialogOptions { FullScreen = true });
     }
 }
