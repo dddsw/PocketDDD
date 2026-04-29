@@ -24,6 +24,10 @@ env:
   DOTNET_CORE_VERSION: 10.0.x
   WORKING_DIRECTORY: PocketDDD.Server/PocketDDD.Server.WebAPI
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy_terraform:
     runs-on: ubuntu-latest
