@@ -28,7 +28,7 @@ data "cloudflare_zone" "dns_zone" {
 
 resource "cloudflare_dns_record" "cname_record" {
   zone_id = data.cloudflare_zone.dns_zone.id
-  name    = "${local.subdomain}.dddsouthwest.com"
+  name    = local.subdomain
   content = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
   ttl     = 3600
@@ -36,6 +36,6 @@ resource "cloudflare_dns_record" "cname_record" {
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
   static_web_app_id = azurerm_static_web_app.blazor-client.id
-  domain_name       = cloudflare_dns_record.cname_record.name
+  domain_name       = "${cloudflare_dns_record.cname_record.name}.${data.cloudflare_zone.dns_zone.name}"
   validation_type   = "cname-delegation"
 }
