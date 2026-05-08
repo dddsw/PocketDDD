@@ -31,7 +31,9 @@ resource "cloudflare_dns_record" "cname_record" {
   name    = local.subdomain
   content = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
-  ttl     = 3600
+  ttl     = 1 # 1 = automatic (proxied)
+  proxied = true # Enable Cloudflare proxy (orange cloud) for SSL termination
+  comment = "Blazor client custom domain - SSL handled by Cloudflare and Azure auto-provisioned certificate"
 }
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
