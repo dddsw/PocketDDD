@@ -34,6 +34,6 @@ resource "cloudflare_dns_record" "cname_record" {
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {
   static_web_app_id = azurerm_static_web_app.blazor-client.id
-  domain_name       = cloudflare_dns_record.cname_record.hostname
+  domain_name       = cloudflare_dns_record.cname_record.name
   validation_type   = "cname-delegation"
 }
