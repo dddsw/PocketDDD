@@ -21,7 +21,9 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
 }
 
 data "cloudflare_zone" "dns_zone" {
-  zone_id = "dddsouthwest.com"
+  filter = {
+    equal = "dddsouthwest.com"
+  }
 }
 
 resource "cloudflare_dns_record" "cname_record" {
