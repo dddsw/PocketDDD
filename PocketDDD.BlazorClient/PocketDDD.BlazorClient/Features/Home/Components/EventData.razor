@@ -49,30 +49,30 @@
                                     <MudText Typo="Typo.subtitle1">@session.SpeakerName</MudText>
                                 </MudStack>
                                 <MudStack Justify="Justify.SpaceBetween" AlignItems="AlignItems.End" Spacing="0">
-                                    <MudButtonGroup Color="Color.Default" Variant="Variant.Outlined">
-                                        <MudToggleIconButton
-                                            ToggledChanged="@(_ => HandleGiveSessionFeedback(session.Id))"
-                                            Toggled="@session.HasFeedback"
-                                            Icon="@Icons.Material.Filled.TagFaces"
-                                            ToggledIcon="@Icons.Material.Rounded.TagFaces"
-                                            ToggledColor="@Color.Success"
-                                            title="Give session feedback">
-                                        </MudToggleIconButton>
-                                        <MudToggleIconButton
-                                            ToggledChanged="@(_ => HandleToggleSessionBookmarked(session))"
-                                            Toggled="@session.IsBookmarked"
-                                            Icon="@Icons.Material.Filled.BookmarkBorder"
-                                            ToggledIcon="@Icons.Material.Filled.Bookmark"
-                                            ToggledColor="@Color.Primary"
-                                            title="@(session.IsBookmarked ? "Unbookmark session" : "Bookmark session")"/>
-                                    </MudButtonGroup>
                                     @ShowSessionLength(session)
                                 </MudStack>
                             </MudStack>
-                            <MudButton OnClick="() => HandleViewSession(session.Id)" FullWidth="true"
-                                       Variant="Variant.Outlined" Class="my-2">
-                                More details
-                            </MudButton>
+
+                            <MudButtonGroup Color="Color.Default" Variant="Variant.Outlined" FullWidth="true">
+                                <MudToggleIconButton
+                                    ToggledChanged="@(_ => HandleGiveSessionFeedback(session.Id))"
+                                    Toggled="@session.HasFeedback"
+                                    Icon="@Icons.Material.Filled.TagFaces"
+                                    ToggledColor="@Color.Primary"
+                                    title="Give session feedback">
+                                </MudToggleIconButton>
+                                <MudButton OnClick="() => HandleViewSession(session.Id)">
+                                    More details
+                                </MudButton>
+                                <MudToggleIconButton
+                                    ToggledChanged="@(_ => HandleToggleSessionBookmarked(session))"
+                                    Toggled="@session.IsBookmarked"
+                                    Icon="@Icons.Material.Filled.BookmarkBorder"
+                                    ToggledIcon="@Icons.Material.Filled.Bookmark"
+                                    ToggledColor="@Color.Primary"
+                                    title="@(session.IsBookmarked ? "Unbookmark session" : "Bookmark session")"/>
+                            </MudButtonGroup>
+
                             @if (i < room.Sessions.Count - 1)
                             {
                                 <MudDivider Class="@GetMultiTalkDividerStylesForRoom(room)"
