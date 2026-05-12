@@ -23,7 +23,7 @@
         <MudButton
             EndIcon="@Icons.Material.Filled.TagFaces"
             Size="Size.Small"
-            OnClick="HandleShowEventFeedback"
+            OnClick="HandleShowFeedback"
             Color="Color.Inherit"
             Variant="Variant.Outlined">
             @(State.Value.ShowBackButton ? "Session feedback" : "Event feedback")
@@ -33,6 +33,6 @@
 </MudAppBar>
 
 @code {
-    void HandleShowEventFeedback() => Dispatcher.Dispatch(new ViewFeedbackAction());
+    void HandleShowFeedback() => Dispatcher.Dispatch(new ViewFeedbackAction());
     void HandleNavigateBack() => Dispatcher.Dispatch(new NavigateBackAction());
 }
