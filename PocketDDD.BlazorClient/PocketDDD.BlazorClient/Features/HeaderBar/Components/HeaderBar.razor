@@ -26,7 +26,7 @@
             OnClick="HandleShowEventFeedback"
             Color="Color.Inherit"
             Variant="Variant.Outlined">
-            Feedback
+            @(State.Value.ShowBackButton ? "Session feedback" : "Event feedback")
         </MudButton>
     }
 
