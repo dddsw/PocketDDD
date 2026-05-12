@@ -23,6 +23,8 @@ public class HomeEffects
             _ => dispatcher.Dispatch(new LoadDataAction()));
         _localStorage.SessionBookmarks.SubscribeToChanges(
             _ => dispatcher.Dispatch(new LoadDataAction()));
+        _localStorage.SessionFeedbacks.SubscribeToChanges(
+            _ => dispatcher.Dispatch(new LoadDataAction()));
     }
 
     [EffectMethod]
@@ -30,9 +32,10 @@ public class HomeEffects
     {
         var eventData = await _localStorage.EventData.GetAsync();
         var sessionBookmarks = await _localStorage.SessionBookmarks.GetOrDefaultAsync();
+        var sessionFeedbacks = (await _localStorage.SessionFeedbacks.GetOrDefaultAsync()).Select(s => s.SessionId).ToArray();
 
         if (eventData is not null)
-            dispatcher.Dispatch(new SetEventMetaDataAction(eventData, sessionBookmarks));
+            dispatcher.Dispatch(new SetEventMetaDataAction(eventData, sessionBookmarks, sessionFeedbacks));
     }
 
     [EffectMethod]

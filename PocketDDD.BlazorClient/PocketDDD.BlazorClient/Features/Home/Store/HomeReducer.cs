@@ -12,21 +12,10 @@ public static class HomeReducer
 
     [ReducerMethod]
     public static HomeState OnSetEventData(HomeState state, SetEventMetaDataAction action) =>
-        state with 
-        { 
-            Loading = false, 
-            FailedToLoad = false, 
-            Timeslots = action.EventData.ToHomeStateModel(action.SessionBookmarks)
+        state with
+        {
+            Loading = false,
+            FailedToLoad = false,
+            Timeslots = action.EventData.ToHomeStateModel(action.SessionBookmarks, action.SessionFeedbacks)
         };
-
-    //[ReducerMethod]
-    //public static HomeState OnEventDataUpdated(HomeState state, EventDataUpdatedAction action) =>
-    //    state with
-    //    {
-    //        Loading = false,
-    //        FailedToLoad = false,
-    //        EventMetaData = action.EventData.ToHomeStateModel()
-    //    };
-
-
 }
