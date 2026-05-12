@@ -8,3 +8,4 @@ public record LoadDataAction();
 public record SetUserLoggedInAction();
 public record SetEventMetaDataAction(EventDataResponseDTO EventData, ICollection<int> SessionBookmarks);
 public record ToggleBookmarkedAction(int SessionId, bool Bookmarked);
+public record GiveSessionFeedbackAction(int SessionId);

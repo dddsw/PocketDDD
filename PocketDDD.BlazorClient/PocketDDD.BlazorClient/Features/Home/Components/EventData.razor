@@ -49,14 +49,21 @@
                                     <MudText Typo="Typo.subtitle1">@session.SpeakerName</MudText>
                                 </MudStack>
                                 <MudStack Justify="Justify.SpaceBetween" AlignItems="AlignItems.End" Spacing="0">
-                                    <MudToggleIconButton
-                                        ToggledChanged="@(_ => HandleToggleSessionBookmarked(session))"
-                                        Toggled="@session.IsBookmarked"
-                                        Color="@Color.Default"
-                                        Icon="@Icons.Material.Filled.BookmarkBorder"
-                                        ToggledIcon="@Icons.Material.Filled.Bookmark"
-                                        ToggledColor="@Color.Primary"
-                                        title="@(session.IsBookmarked ? "Unbookmark session" : "Bookmark session")"/>
+                                    <MudButtonGroup Color="Color.Default" Variant="Variant.Outlined">
+                                        <MudIconButton
+                                            Variant="Variant.Outlined"
+                                            OnClick="@(_ => HandleGiveSessionFeedback(session.Id))"
+                                            Icon="@Icons.Material.Filled.TagFaces"
+                                            title="Give session feedback">
+                                        </MudIconButton>
+                                        <MudToggleIconButton
+                                            ToggledChanged="@(_ => HandleToggleSessionBookmarked(session))"
+                                            Toggled="@session.IsBookmarked"
+                                            Icon="@Icons.Material.Filled.BookmarkBorder"
+                                            ToggledIcon="@Icons.Material.Filled.Bookmark"
+                                            ToggledColor="@Color.Primary"
+                                            title="@(session.IsBookmarked ? "Unbookmark session" : "Bookmark session")"/>
+                                    </MudButtonGroup>
                                     @ShowSessionLength(session)
                                 </MudStack>
                             </MudStack>
@@ -139,6 +146,11 @@
     void HandleToggleSessionBookmarked(Session session)
     {
         Dispatcher.Dispatch(new ToggleBookmarkedAction(session.Id, !session.IsBookmarked));
+    }
+
+    void HandleGiveSessionFeedback(int sessionId)
+    {
+        Dispatcher.Dispatch(new GiveSessionFeedbackAction(sessionId));
     }
 
 }
