@@ -28,6 +28,7 @@ public record Session
     public DateTimeOffset To { get; init; }
     public string Title { get; init; } = string.Empty;
     public string SpeakerName { get; init; } = string.Empty;
+    public bool HasFeedback { get; set; } = false;
     public bool IsBookmarked { get; set; } = false;
     public TimeSpan Length => To.Subtract(From);
 }
