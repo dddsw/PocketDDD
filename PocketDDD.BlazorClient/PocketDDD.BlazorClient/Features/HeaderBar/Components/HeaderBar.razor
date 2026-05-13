@@ -17,22 +17,32 @@
 
     <MudText Typo="Typo.h5">@State.Value.Title</MudText>
     <MudSpacer />
-    
-    @if (State.Value.ShowFeedbackButton)
-    {
-        <MudButton
-            EndIcon="@Icons.Material.Filled.TagFaces"
-            Size="Size.Small"
-            OnClick="HandleShowFeedback"
-            Color="Color.Inherit"
-            Variant="Variant.Outlined">
-            @(State.Value.ShowBackButton ? "Session feedback" : "Event feedback")
-        </MudButton>
-    }
-
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@OpenDrawer"/>
 </MudAppBar>
+<MudDrawer @bind-Open="@_open">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6">Pocket DDD</MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudNavLink Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Outlined.Home">Home</MudNavLink>
+        @if (State.Value.ShowFeedbackButton)
+        {
+            <MudNavLink Match="NavLinkMatch.All" OnClick="@HandleShowFeedback" Icon="@Icons.Material.Filled.TagFaces">
+                @(State.Value.ShowBackButton ? "Session feedback" : "Event feedback")
+            </MudNavLink>
+        }
+        <MudNavLink Href="https://dddsouthwest.com/venue-layout" Icon="@Icons.Material.Outlined.Map">Venue map</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
 
-@code {
+@code { 
+    private bool _open;
+
+    private void OpenDrawer()
+    {
+        _open = true;
+    }
+    
     void HandleShowFeedback() => Dispatcher.Dispatch(new ViewFeedbackAction());
     void HandleNavigateBack() => Dispatcher.Dispatch(new NavigateBackAction());
 }
