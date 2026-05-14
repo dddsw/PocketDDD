@@ -1,7 +1,0 @@
-{
-  "name": "Pocket DDDSW 2022",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
