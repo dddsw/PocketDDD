@@ -45,8 +45,3 @@ variable "client_sku_size" {
   nullable = false
   type     = string
 }
-
-variable "cloudflare_account_id" {
-  nullable = false
-  type     = string
-}

@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.10.0"
+  required_version = ">= 1.13.4"
   
   backend "azurerm" {
     resource_group_name  = "pocketddd-terraform-state"
