@@ -4,6 +4,12 @@ variable "env" {
   type     = string
 }
 
+variable "region" {
+  default  = "UK South"
+  nullable = false
+  type     = string
+}
+
 variable "sql_db_sku" {
   default  = "S0"
   nullable = false

@@ -7,7 +7,7 @@ resource "azurerm_static_web_app" "blazor-client" {
   sku_size = var.client_sku_size
 
   app_settings = {
-    "apiUrl" : "https://pocketddd-${var.env}-api-server-web-app.azurewebsites.net/api/"
+    "apiUrl" : "https://${azurerm_linux_web_app.api_server_web_app.default_hostname}/api/"
     "fakeBackend" : "false"
   }
 
@@ -21,7 +21,9 @@ resource "azurerm_key_vault_secret" "blazor_client_deployment_token" {
 }
 
 data "cloudflare_zone" "dns_zone" {
-  zone_id = "4c52c7e174b32da4b4786d3dba3d955f"
+  filter = {
+    equal = "dddsouthwest.com"
+  }
 }
 
 resource "cloudflare_dns_record" "cname_record" {
@@ -29,7 +31,9 @@ resource "cloudflare_dns_record" "cname_record" {
   name    = local.subdomain
   content = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
-  ttl     = 3600
+  ttl     = 1 # 1 = automatic (proxied)
+  proxied = true # Disable Cloudflare proxy, Azure can handle SSL
+  comment = "Blazor client custom domain - SSL handled by Cloudflare and Azure auto-provisioned certificate"
 }
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {

@@ -3,5 +3,6 @@ output "api_server_url" {
 }
 
 output "client_app_public_url" {
-  value = "https://${azurerm_static_web_app_custom_domain.custom_domain.domain_name}"
+  value       = "https://${azurerm_static_web_app_custom_domain.custom_domain.domain_name}"
+  description = "Blazor client public URL with SSL enabled via Cloudflare and Azure"
 }

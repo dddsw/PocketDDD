@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_resource_group" "rg" {
   name     = "${local.resource_prefix}-rg"
-  location = "UK South"
+  location = var.region
 }
 
 resource "random_string" "admin_login" {
