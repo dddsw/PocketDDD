@@ -48,6 +48,7 @@
         Dispatcher.Dispatch(new SyncAction());
 
         SubscribeToAction<ViewFeedbackAction>(action => { _ = HandleShowEventFeedback(); });
+        SubscribeToAction<GiveSessionFeedbackAction>(action => { _ = HandleGiveSessionFeedback(action.SessionId); });
 
         base.OnInitialized();
     }
@@ -55,5 +56,13 @@
     async Task HandleShowEventFeedback()
     {
         await Dialog.ShowAsync<EventFeedback>("", new DialogOptions { FullScreen = true });
+    }
+
+    async Task HandleGiveSessionFeedback(int sessionId)
+    {
+        await Dialog.ShowAsync<Features.SessionFeedback.Components.SessionFeedback>(
+            "",
+            new DialogParameters { ["Id"] = sessionId },
+            new DialogOptions { FullScreen = true });
     }
 }
