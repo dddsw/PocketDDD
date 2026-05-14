@@ -6,7 +6,7 @@ namespace PocketDDD.BlazorClient.Features.Home.Store;
 public static class EventDataMapper
 {
     public static IImmutableList<TimeSlot> ToHomeStateModel(this EventDataResponseDTO eventData,
-        ICollection<int> sessionBookmarks)
+        ICollection<int> sessionBookmarks, ICollection<int> sessionFeedbacks)
     {
         // The break timeslots don't have any sessions but still need to be included so starting from eventData.TimeSlots
         var allTimeSlotDtosSortedByTimeAndLength = eventData.TimeSlots.OrderBy(t => t.From).ThenByDescending(t => t.To);
@@ -29,7 +29,8 @@ public static class EventDataMapper
                                 To = timeSlotDto.To,
                                 Title = s.Title,
                                 SpeakerName = s.Speaker,
-                                IsBookmarked = sessionBookmarks.Contains(s.Id)
+                                IsBookmarked = sessionBookmarks.Contains(s.Id),
+                                HasFeedback = sessionFeedbacks.Contains(s.Id)
                             })
                     ).ToList()
             );
