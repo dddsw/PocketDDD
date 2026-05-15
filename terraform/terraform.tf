@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.10.0"
+  required_version = ">= 1.13.4"
   
   backend "azurerm" {
     resource_group_name  = "pocketddd-terraform-state"
@@ -9,11 +9,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.70.0"
+      version = "~> 4.73.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.7.0"
+      version = "~> 3.9.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"

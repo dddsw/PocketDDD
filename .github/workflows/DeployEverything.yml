@@ -17,8 +17,6 @@ on:
         required: true
       CLOUDFLARE_TOKEN:
         required: true
-      CLOUDFLARE_ACCOUNT_ID:
-        required: true
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: PocketDDD.Server.WebAPI/publish
@@ -48,9 +46,9 @@ jobs:
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v4
     - run: |
-        terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
+        # terraform init -backend-config="key=${{ inputs.env }}.terraform.tfstate"
 
-        terraform apply -auto-approve -var-file ../tfvars/${{ inputs.env }}.tfvars -var 'cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        # terraform apply -auto-approve -var-file ../tfvars/${{ inputs.env }}.tfvars
       env:
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_ACCESS_KEY: ${{ secrets.TERRAFORM_STATE_ACCESS_KEY }}
