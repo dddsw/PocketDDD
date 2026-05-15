@@ -17,8 +17,9 @@ builder.Services.AddMudServices();
 builder.Services.AddFluxor(o =>
 {
     o.ScanAssemblies(typeof(Program).Assembly);
-    if (builder.HostEnvironment.IsDevelopment())
-        o.UseReduxDevTools();
+    // Removing because there are problems insttiating this since .NET 7 -> if you want to fix then ensure that all unintitialised-type build warnings are fixed
+    //    if (builder.HostEnvironment.IsDevelopment())
+    //        o.UseReduxDevTools();
 });
 builder.Services.AddBlazoredLocalStorage();
 
