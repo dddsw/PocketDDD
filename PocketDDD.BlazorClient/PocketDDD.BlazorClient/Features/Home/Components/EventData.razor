@@ -8,7 +8,7 @@
 <MudList T="string" Class="pt-0 mud-background-gray" Dense="true">
     @foreach (var timeSlot in State.Value.Timeslots)
     {
-        <MudListSubheader Class="pt-2 pb-1">
+        <MudListSubheader Class="pt-2 pb-1" id="@GetTimeSlotId(timeSlot)" Style="scroll-margin-top: 72px;">
             <MudPaper Width="fit-content" Class="mud-theme-primary border-solid py-2 px-6 my-0">
                 <MudText Typo="Typo.h6" Align="Align.Center">
                     @timeSlot.From.LocalDateTime.ToString("h:mm")
@@ -139,6 +139,35 @@
 }
 
 @code {
+
+    private bool _hasScrolledToCurrentTime;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (_hasScrolledToCurrentTime || State.Value.Timeslots.Count == 0)
+            return;
+
+        var currentTimeSlot = GetCurrentTimeSlot();
+        if (currentTimeSlot is null)
+            return;
+
+        _hasScrolledToCurrentTime = true;
+        NavigationManager.NavigateTo($"#{GetTimeSlotId(currentTimeSlot)}", false);
+    }
+
+    private TimeSlot? GetCurrentTimeSlot()
+    {
+        var now = DateTime.Now.TimeOfDay;
+
+        return State.Value.Timeslots
+            .OrderBy(timeSlot => Math.Abs((timeSlot.From.LocalDateTime.TimeOfDay - now).TotalMinutes))
+            .FirstOrDefault();
+    }
+
+    private static string GetTimeSlotId(TimeSlot timeSlot) =>
+        $"timeslot-{timeSlot.From.LocalDateTime:HHmm}";
 
     void HandleViewSession(int sessionId)
     {
