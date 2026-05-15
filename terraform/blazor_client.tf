@@ -28,12 +28,16 @@ data "cloudflare_zone" "dns_zone" {
 
 resource "cloudflare_dns_record" "cname_record" {
   zone_id = data.cloudflare_zone.dns_zone.id
-  name    = local.subdomain
+  name    = "${local.subdomain}.dddsouthwest.com"
   content = azurerm_static_web_app.blazor-client.default_host_name
   type    = "CNAME"
   ttl     = 1 # 1 = automatic (proxied)
-  proxied = true # Disable Cloudflare proxy, Azure can handle SSL
+  proxied = false # Disable Cloudflare proxy, Azure can handle SSL
   comment = "Blazor client custom domain - SSL handled by Cloudflare and Azure auto-provisioned certificate"
+
+  lifecycle {
+    ignore_changes = [ proxied ]
+  }
 }
 
 resource "azurerm_static_web_app_custom_domain" "custom_domain" {

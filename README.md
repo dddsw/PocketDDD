@@ -77,7 +77,7 @@ From the `terraform` directory run init, plan, then apply if happy with the chan
 ```
 cd ./terraform
 
-terraform init -backend-config="dev.terraform.tfstate"  
+terraform init -backend-config='key="dev.terraform.tfstate"'
 terraform plan -var-file ../tfvars/dev.tfvars
 terraform apply -var-file ../tfvars/dev.tfvars
 ```
