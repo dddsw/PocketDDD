@@ -14,7 +14,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["apiUrl"]!) });
 builder.Services.AddMudServices();
-builder.Services.AddFluxor(o => o.ScanAssemblies(typeof(Program).Assembly).UseReduxDevTools());
+builder.Services.AddFluxor(o =>
+{
+    o.ScanAssemblies(typeof(Program).Assembly);
+    if (builder.HostEnvironment.IsDevelopment())
+        o.UseReduxDevTools();
+});
 builder.Services.AddBlazoredLocalStorage();
 
 if (builder.Configuration.GetValue<bool>("fakeBackend") == false)
