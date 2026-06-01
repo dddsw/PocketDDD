@@ -19,7 +19,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.2"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1"/>
     </ItemGroup>
 
     <ItemGroup>
