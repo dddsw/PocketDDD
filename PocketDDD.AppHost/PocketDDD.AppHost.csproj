@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="13.4.0" />
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.4.0" />
-    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" Version="13.2.1-beta.532" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" Version="13.4.0" />
     <PackageReference Include="WireMock.Net.Aspire" Version="2.4.0" />
   </ItemGroup>
 
