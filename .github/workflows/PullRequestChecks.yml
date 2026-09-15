@@ -1,0 +1,39 @@
+name: Pull request checks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  DOTNET_CORE_VERSION: 10.0.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+      - name: Restore
+        run: dotnet restore PocketDDD.slnx
+      - name: Build
+        run: dotnet build PocketDDD.slnx --configuration Release --no-restore
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+      - name: Format check
+        run: terraform fmt -check -recursive
+      - name: Init (no backend)
+        run: terraform init -backend=false
+      - name: Validate
+        run: terraform validate
